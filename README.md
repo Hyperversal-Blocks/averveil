@@ -1,6 +1,6 @@
 # Averveil
 
-![hackmd-github-sync-badge](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ/badge)
+[![hackmd-github-sync-badge](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ/badge)](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ)
 
 
 ## Overview
