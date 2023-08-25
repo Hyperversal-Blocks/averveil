@@ -167,3 +167,4 @@ Here are the points where data storage is involved where Swarm will be used as s
 - [ ] Implement ZKP and Sensors implementation.
 - [ ] Averveil frontend implementation.
 - [ ] Averveil MVP Completion.
+- [ ] Data-remodelling for storage on Swarm.
