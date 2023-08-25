@@ -1,6 +1,6 @@
 # Averveil
 
-[![hackmd-github-sync-badge](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ/badge)](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ)
+![hackmd-github-sync-badge](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ/badge)
 
 
 ## Overview
@@ -163,4 +163,7 @@ Here are the points where data storage is involved where Swarm will be used as s
 - [ ] Implement the Mock Services idenfitifed in Sprints with value objects and data transfer objects.
 - [ ] Re-configure the node structure based on the newly identified mocks of other services with appropriate data transfer objects and value objects.
 
-##### Milestone Q4: TBD
+##### Milestone Q4: ZKP and Sensors
+- [ ] Implement ZKP and Sensors implementation.
+- [ ] Averveil frontend implementation.
+- [ ] Averveil MVP Completion.
