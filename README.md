@@ -90,7 +90,7 @@ In essence, Pillarbox's connection is essential, serving as a linchpin in the Av
 
 ### ChainRegister
 #### Overview
-Chain Register is a decentralized node-based system designed to facilitate the seamless operation of various services within the Averveil multiverse as well as other future multiverses. Node operators play a central role by booting up nodes that host a range of services, including those mentioned earlier (Escrow, ZkInsights, ZkLabels, ZkTracker, PillarBox) as well as additional essential services like Swarm and IPFS. These nodes collectively form the backbone of the Averveil ecosystem.
+Chain Register is a decentralized node-based system designed to facilitate the seamless operation of various services within the Averveil multiverse as well as other future multiverses. Node operators play a central role by booting up nodes that host a range of services, including those mentioned earlier (Escrow, ZkInsights, ZkLabels, ZkTracker, PillarBox) as well as additional essential services like Swarm and libp2p. These nodes collectively form the backbone of the Averveil ecosystem.
 
 #### Node Setup and Service Deployment
 Node operators take responsibility for initializing nodes within the Chain Register system. Upon booting up, nodes automatically instantiate instances of the specified services, ensuring their availability to network participants. This automated process includes the setup of in-memory databases and other requisite services. Node operators' participation in the system is incentivized through a rewards mechanism.
@@ -152,7 +152,7 @@ Here are the points where data storage is involved where Swarm will be used as s
 - [ ] Develop a secure node boot-up mechanism for Chain Register.
 - [ ] Create scripts for automated deployment of node instances.
 - [ ] Implement an MVP of each service that will be extended in Node. 
-- [ ] Set up and configure Swarm and IPFS for data storage.
+- [ ] Set up and configure Swarm and libp2p for data storage.
 
 ##### Milestone Q2 and Q3: Contract and Services
 - [ ] Design the ERC20 Contract.
