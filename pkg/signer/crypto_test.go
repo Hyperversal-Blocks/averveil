@@ -73,13 +73,13 @@ func TestCrypto(t *testing.T) {
 			t.Fatal("unexpected err: ", err)
 		}
 
-		isValid := yourSigner.VerifySignature(*yourSigner.GetPublicKey(), signature, hashed[:])
+		isValid := theirSigner.VerifySignature(*yourSigner.GetPublicKey(), signature, hashed[:])
 		if !isValid {
 			t.Fatal("expected valid")
 		}
 	})
 
-	t.Run("verify signature", func(t *testing.T) {
+	t.Run("verify shared keys matching", func(t *testing.T) {
 		theirSharedKey := theirSigner.GetSharedKey(*yourSigner.GetPublicKey())
 		yourSharedKey := yourSigner.GetSharedKey(*theirSigner.GetPublicKey())
 
