@@ -2,3 +2,6 @@
 .vscode
 env.json
 env
+coverage.out
+logrus.log
+./pkg/logger/logrus.log
