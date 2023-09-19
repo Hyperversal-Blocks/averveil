@@ -8,6 +8,8 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"math/big"
+
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 // GetSharedKey returns the shared key using the private and public key.
@@ -27,8 +29,8 @@ func (c *signer) GenNonce() []byte {
 }
 
 // EncryptAndGetHash using the shared key, nonce and message.
-func (c *signer) EncryptAndGetHash(sharedKey [32]byte, nonce []byte, message []byte) ([32]byte, []byte, error) {
-	aesgcm, err := c.getCipherMode(sharedKey[:]) // generate cipher block with an aes key
+func (c *signer) EncryptAndGetHash(key [32]byte, nonce []byte, message []byte) ([32]byte, []byte, error) {
+	aesgcm, err := c.getCipherMode(key[:]) // generate cipher block with an aes key
 	if err != nil {
 		return [32]byte{}, nil, fmt.Errorf("error getting cipher mode: %w", err)
 	}
@@ -76,7 +78,6 @@ func (c *signer) VerifySignature(publicKey ecdsa.PublicKey, signature, messageHa
 
 	// verify the signature
 	return ecdsa.Verify(&publicKey, messageHash, r, s)
-
 }
 
 // Sign the hash with privateKey of encrypter.
@@ -89,4 +90,12 @@ func (c *signer) Sign(hash [32]byte) ([]byte, error) {
 	// combine r and s to create the signature
 	signature := append(r.Bytes(), s.Bytes()...)
 	return signature, nil
+}
+
+func (c *signer) PublicKeyFromBytes(pbKey []byte) (*ecdsa.PublicKey, error) {
+	return crypto.UnmarshalPubkey(pbKey)
+}
+
+func (c *signer) BytesFromPublicKey(key *ecdsa.PublicKey) []byte {
+	return crypto.FromECDSAPub(key)
 }

@@ -19,12 +19,14 @@ type Signer interface {
 	SignTx(transaction *types.Transaction, chainID *big.Int) (*types.Transaction, error)
 	GetSharedKey(their ecdsa.PublicKey) [32]byte
 	GenNonce() []byte
-	EncryptAndGetHash(sharedKey [32]byte, nonce []byte, message []byte) ([32]byte, []byte, error)
+	EncryptAndGetHash(key [32]byte, nonce []byte, message []byte) ([32]byte, []byte, error)
 	DecryptMessage(sharedKey [32]byte, cipherText []byte, nonce []byte) (string, error)
 	getCipherMode(key []byte) (cipher.AEAD, error)
 	VerifySignature(publicKey ecdsa.PublicKey, signature, messageHash []byte) bool
 	Sign(hash [32]byte) ([]byte, error)
 	GetPublicKey() *ecdsa.PublicKey
+	PublicKeyFromBytes(pbKey []byte) (*ecdsa.PublicKey, error)
+	BytesFromPublicKey(key *ecdsa.PublicKey) []byte
 }
 
 type signer struct {
