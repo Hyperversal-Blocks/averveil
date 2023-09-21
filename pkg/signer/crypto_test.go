@@ -92,4 +92,16 @@ func TestCrypto(t *testing.T) {
 				"\nyour secret: ", hex.EncodeToString(yourSharedKey[:]))
 		}
 	})
+
+	t.Run("get public key from bytes", func(t *testing.T) {
+
+		publicKeyInBytes := yourSigner.BytesFromPublicKey(yourSigner.GetPublicKey())
+		publicKeyString := hex.EncodeToString(publicKeyInBytes)
+
+		pubKeyBytes, _ := hex.DecodeString(publicKeyString)
+		pubKey, _ := yourSigner.PublicKeyFromBytes(pubKeyBytes)
+		if !yourSigner.GetPublicKey().Equal(pubKey) {
+			t.Fatal("original Key:\n", yourSigner.GetPublicKey(), " \nGot:\n", pubKey)
+		}
+	})
 }
