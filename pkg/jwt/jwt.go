@@ -24,10 +24,23 @@ type DecodeJWTClaims struct {
 }
 
 // Wrapper wraps the signing key and the issuer
-type Wrapper struct {
+type wrapper struct {
 	SecretKey       string
 	Issuer          string
 	ExpirationHours int64
+}
+
+type JWT interface {
+	GenerateToken(publicKey, secret string) (string, error)
+	ValidateToken(token, secret string) (*Claim, error)
+}
+
+func New(secret, issuer string, expiry int64) JWT {
+	return &wrapper{
+		SecretKey:       secret,
+		Issuer:          issuer,
+		ExpirationHours: expiry,
+	}
 }
 
 // Claim adds email as a claim to the token
@@ -36,28 +49,20 @@ type Claim struct {
 	jwt.RegisteredClaims
 }
 
-type JWT struct {
-	secret string
-}
-
 // GenerateToken generates a jwt token
-func GenerateToken(publicKey, secret string) (string, error) {
-	jwtWrapper := &Wrapper{
-		SecretKey:       secret,
-		Issuer:          "av",
-		ExpirationHours: 1, // TODO move to config
-	}
+func (w *wrapper) GenerateToken(publicKey, secret string) (string, error) {
 	claims := &Claim{
 		PublicKey: publicKey,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: &jwt.NumericDate{Time: time.Now().Local().Add(time.Hour * time.Duration(jwtWrapper.ExpirationHours))},
-			Issuer:    jwtWrapper.Issuer,
+			ExpiresAt: &jwt.NumericDate{Time: time.Now().Local().Add(time.Hour * time.Duration(w.ExpirationHours))},
+			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
+			Issuer:    w.Issuer,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	signedToken, err := token.SignedString([]byte(jwtWrapper.SecretKey))
+	signedToken, err := token.SignedString([]byte(w.SecretKey))
 	if err != nil {
 		return "", fmt.Errorf("code signing token: %w", err)
 	}
@@ -68,16 +73,10 @@ func GenerateToken(publicKey, secret string) (string, error) {
 var ErrInvalidToken = errors.New("invalid token")
 
 // ValidateToken validates the jwt token
-func ValidateToken(token, secret string) (*Claim, error) {
-	jwtWrapper := &Wrapper{
-		SecretKey:       secret,
-		Issuer:          "av",
-		ExpirationHours: 1,
-	}
-
+func (w *wrapper) ValidateToken(token, secret string) (*Claim, error) {
 	parsed, err := jwt.ParseWithClaims(token, &Claim{},
 		func(token *jwt.Token) (interface{}, error) {
-			return []byte(jwtWrapper.SecretKey), nil
+			return []byte(w.SecretKey), nil
 		},
 	)
 	if err != nil {

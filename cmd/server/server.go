@@ -12,6 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/hyperversalblocks/averveil/configuration"
+	"github.com/hyperversalblocks/averveil/pkg/jwt"
 	"github.com/hyperversalblocks/averveil/pkg/logger"
 	"github.com/hyperversalblocks/averveil/pkg/node"
 )
@@ -22,6 +23,7 @@ type Container struct {
 	router     *chi.Mux
 	node       *node.Node
 	ethAddress common.Address
+	jwt        jwt.JWT
 }
 
 func Init() error {
