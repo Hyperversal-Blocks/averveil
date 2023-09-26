@@ -1,4 +1,4 @@
-package databases
+package redis
 
 import (
 	"context"
@@ -18,7 +18,7 @@ type redisClient struct {
 	client *redis.Client
 }
 
-func NewClient(addr string, db int) Redis {
+func New(addr string, db int) Redis {
 	client := redis.NewClient(&redis.Options{
 		Addr: addr,
 		DB:   db,

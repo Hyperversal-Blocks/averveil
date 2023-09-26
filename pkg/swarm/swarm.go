@@ -1,4 +1,4 @@
-package databases
+package swarm
 
 import (
 	"encoding/json"

@@ -4,106 +4,86 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/cors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/hyperversalblocks/averveil/configuration"
-	"github.com/hyperversalblocks/averveil/pkg/jwt"
+	"github.com/hyperversalblocks/averveil/pkg/api"
+	"github.com/hyperversalblocks/averveil/pkg/auth"
+	jwtPkg "github.com/hyperversalblocks/averveil/pkg/jwt"
 	"github.com/hyperversalblocks/averveil/pkg/logger"
 	"github.com/hyperversalblocks/averveil/pkg/node"
+	"github.com/hyperversalblocks/averveil/pkg/store"
+	"github.com/hyperversalblocks/averveil/pkg/user"
 )
 
-type Container struct {
-	config     *configuration.Config
-	logger     *logrus.Logger
-	router     *chi.Mux
-	node       *node.Node
-	ethAddress common.Address
-	jwt        jwt.JWT
+type Services struct {
+	config *configuration.Config
+	logger *logrus.Logger
+	api    *api.Services
 }
 
 func Init() error {
-	ctx := context.Background()
-
-	logger, conf, node, err := bootstrapper(ctx)
+	services, err := bootstrapper(context.Background())
 	if err != nil {
-		return fmt.Errorf("error bootstrapping core services: %w", err)
+		return err
 	}
 
-	container := initContainer(logger, conf, node)
-	container.cors()
-	container.routes()
+	services.api.Cors()
+	services.api.Routes()
 
 	go func() {
-		container.startServer()
+		services.startServer()
 	}()
 	select {}
 }
 
-func (c *Container) startServer() {
+func (c *Services) startServer() {
 	address := c.config.Server.Host + c.config.Server.PORT
 
 	c.logger.Info("Starting Server at:", address)
 
-	err := http.ListenAndServe(address, c.router)
+	err := http.ListenAndServe(address, c.api.GetRouter())
 	if err != nil {
 		c.logger.Error("error starting server at ", address, " with error: ", err)
 		panic(err)
 	}
 }
 
-func (c *Container) routes() {
-	c.router.Route("/storage", func(r chi.Router) {
-		// setter
-		// getter
-	})
-}
-
-func bootstrapper(ctx context.Context) (
-	*logrus.Logger,
-	*configuration.Config,
-	*node.Node,
-	error) {
+func bootstrapper(ctx context.Context) (*Services, error) {
 	confInstance, err := configuration.Init()
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("error bootstrapping config: %w", err)
+		return nil, fmt.Errorf("error bootstrapping config: %w", err)
 	}
 
 	loggerInstance := logger.Init(confInstance)
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("error bootstrapping logger: %w", err)
+		return nil, fmt.Errorf("error bootstrapping logger: %w", err)
+	}
+
+	storer, err := store.New(ctx, loggerInstance)
+	if err != nil {
+		return nil, fmt.Errorf("error bootstrapping store: %w", err)
 	}
 
 	node, err := node.InitNode(ctx, *confInstance, loggerInstance)
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("unable to initialize the node: %w", err)
+		return nil, fmt.Errorf("unable to initialize the node: %w", err)
 	}
-	return loggerInstance, confInstance, node, nil
-}
 
-func initContainer(logger *logrus.Logger,
-	config *configuration.Config,
-	node *node.Node) *Container {
-	return &Container{
-		config:     config,
-		logger:     logger,
-		router:     chi.NewRouter(),
-		node:       node,
-		ethAddress: node.Signer.EthereumAddress(),
-	}
-}
+	jwt := jwtPkg.New(confInstance.JWT.Issuer,
+		confInstance.JWT.Issuer,
+		confInstance.JWT.Expiry)
 
-func (c *Container) cors() {
-	c.router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"*"},
-		ExposedHeaders:   []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           int(12 * time.Hour),
-	}))
+	authService := auth.New(node.Signer, storer, jwt)
+
+	userService := user.New(storer, loggerInstance, node.Signer.EthereumAddress())
+	apiService := api.New(loggerInstance, chi.NewMux(), authService, userService, node, jwt)
+
+	return &Services{
+		config: confInstance,
+		logger: loggerInstance,
+		api:    apiService,
+	}, nil
 }

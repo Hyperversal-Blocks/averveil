@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"context"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -9,15 +8,19 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/hyperversalblocks/averveil/pkg/databases"
 	"github.com/hyperversalblocks/averveil/pkg/jwt"
 	"github.com/hyperversalblocks/averveil/pkg/signer"
+	"github.com/hyperversalblocks/averveil/pkg/store"
 )
 
 type auth struct {
 	Signer signer.Signer
-	Client databases.Redis
+	Store  store.Store
 	JWT    jwt.JWT
+}
+
+func New(signer signer.Signer, store store.Store, JWT jwt.JWT) Auth {
+	return &auth{Signer: signer, Store: store, JWT: JWT}
 }
 
 type Challenge struct {
@@ -32,12 +35,12 @@ type StoredChallenge struct {
 }
 
 type Auth interface {
-	GetChallenge(context.Context, []byte) (*Challenge, error)
-	VerifyChallenge(ctx context.Context, deciphered string) (bool, error)
+	GetChallenge(publicKey []byte) (*Challenge, error)
+	VerifyChallenge(deciphered string, pubKey []byte) (bool, error)
 }
 
 // GetChallenge by generating a shared key from public key of user and private key of node
-func (a *auth) GetChallenge(ctx context.Context, publicKey []byte) (*Challenge, error) {
+func (a *auth) GetChallenge(publicKey []byte) (*Challenge, error) {
 	pubKey, err := a.Signer.PublicKeyFromBytes(publicKey)
 	if err != nil {
 		return nil, fmt.Errorf("unable to generate a challenge: %w", err)
@@ -51,11 +54,17 @@ func (a *auth) GetChallenge(ctx context.Context, publicKey []byte) (*Challenge, 
 		return nil, fmt.Errorf("unable to encrypt and get hash: %w", err)
 	}
 
-	if a.Client.Set(ctx, hex.EncodeToString(publicKey), &StoredChallenge{
+	obj, err := json.Marshal(&StoredChallenge{
 		Ciphered: hex.EncodeToString(cipheredText),
 		Nonce:    hex.EncodeToString(nonce),
-	}) != nil {
-		return nil, fmt.Errorf("unable to store challenge in redis: %w", err)
+	})
+	if err != nil {
+		return nil, fmt.Errorf("unable to marshal challenge: %w", err)
+	}
+
+	err = a.Store.Put(hex.EncodeToString(publicKey), obj)
+	if err != nil {
+		return nil, fmt.Errorf("unable to store challenge: %w", err)
 	}
 
 	return &Challenge{
@@ -65,12 +74,15 @@ func (a *auth) GetChallenge(ctx context.Context, publicKey []byte) (*Challenge, 
 	}, nil
 }
 
-func (a *auth) VerifyChallenge(ctx context.Context, deciphered string, pubKey []byte) (bool, error) {
-	obj := a.Client.Get(ctx, hex.EncodeToString(pubKey))
+func (a *auth) VerifyChallenge(deciphered string, pubKey []byte) (bool, error) {
+	obj, err := a.Store.Get(hex.EncodeToString(pubKey))
+	if err != nil {
+		return false, fmt.Errorf("unable to store challenge: %w", err)
+	}
 
 	challenge := &StoredChallenge{}
 
-	err := json.Unmarshal(obj.([]byte), challenge)
+	err = json.Unmarshal(obj, challenge)
 	if err != nil {
 		return false, fmt.Errorf("unable to unmarshal stored object: %w", err)
 	}
