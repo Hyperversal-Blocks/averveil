@@ -31,8 +31,8 @@ type wrapper struct {
 }
 
 type JWT interface {
-	GenerateToken(publicKey, secret string) (string, error)
-	ValidateToken(token, secret string) (*Claim, error)
+	GenerateToken(publicKey string) (string, error)
+	ValidateToken(token string) (*Claim, error)
 }
 
 func New(secret, issuer string, expiry int64) JWT {
@@ -50,7 +50,7 @@ type Claim struct {
 }
 
 // GenerateToken generates a jwt token
-func (w *wrapper) GenerateToken(publicKey, secret string) (string, error) {
+func (w *wrapper) GenerateToken(publicKey string) (string, error) {
 	claims := &Claim{
 		PublicKey: publicKey,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -73,7 +73,7 @@ func (w *wrapper) GenerateToken(publicKey, secret string) (string, error) {
 var ErrInvalidToken = errors.New("invalid token")
 
 // ValidateToken validates the jwt token
-func (w *wrapper) ValidateToken(token, secret string) (*Claim, error) {
+func (w *wrapper) ValidateToken(token string) (*Claim, error) {
 	parsed, err := jwt.ParseWithClaims(token, &Claim{},
 		func(token *jwt.Token) (interface{}, error) {
 			return []byte(w.SecretKey), nil

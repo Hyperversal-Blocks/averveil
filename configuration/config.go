@@ -28,7 +28,11 @@ type Config struct {
 		PORT    string `mapstructure:"PORT"`
 		CORSAGE int    `mapstructure:"CORS_AGE"`
 	} `mapstructure:"SERVER"`
-	JWTSecret string `mapstructure:"JWT_SECRET"`
+	JWT struct {
+		Secret string `mapstructure:"SECRET"`
+		Issuer string `mapstructure:"ISSUER"`
+		Expiry int64  `mapstructure:"EXPIRY"`
+	} `mapStructure:"JWT"`
 }
 
 func Init() (*Config, error) {
