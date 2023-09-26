@@ -7,16 +7,16 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/dgraph-io/badger/v4"
 	"github.com/google/uuid"
 
-	"github.com/hyperversalblocks/averveil/pkg/databases"
 	"github.com/hyperversalblocks/averveil/pkg/jwt"
 	"github.com/hyperversalblocks/averveil/pkg/signer"
 )
 
 type auth struct {
 	Signer signer.Signer
-	Client databases.Redis
+	Client *badger.DB
 	JWT    jwt.JWT
 }
 
@@ -29,6 +29,10 @@ type Challenge struct {
 type StoredChallenge struct {
 	Ciphered string `json:"ciphered"`
 	Nonce    string `json:"nonce"`
+}
+
+func New(signer signer.Signer, jwt jwt.JWT) {
+
 }
 
 type Auth interface {
@@ -49,13 +53,6 @@ func (a *auth) GetChallenge(ctx context.Context, publicKey []byte) (*Challenge, 
 	_, cipheredText, err := a.Signer.EncryptAndGetHash(sharedKey, nonce, []byte(uuid.NewString()))
 	if err != nil {
 		return nil, fmt.Errorf("unable to encrypt and get hash: %w", err)
-	}
-
-	if a.Client.Set(ctx, hex.EncodeToString(publicKey), &StoredChallenge{
-		Ciphered: hex.EncodeToString(cipheredText),
-		Nonce:    hex.EncodeToString(nonce),
-	}) != nil {
-		return nil, fmt.Errorf("unable to store challenge in redis: %w", err)
 	}
 
 	return &Challenge{

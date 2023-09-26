@@ -4,15 +4,14 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/cors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/hyperversalblocks/averveil/configuration"
-	"github.com/hyperversalblocks/averveil/pkg/jwt"
+	"github.com/hyperversalblocks/averveil/pkg/api"
+	auth2 "github.com/hyperversalblocks/averveil/pkg/auth"
 	"github.com/hyperversalblocks/averveil/pkg/logger"
 	"github.com/hyperversalblocks/averveil/pkg/node"
 )
@@ -23,21 +22,10 @@ type Container struct {
 	router     *chi.Mux
 	node       *node.Node
 	ethAddress common.Address
-	jwt        jwt.JWT
 }
 
 func Init() error {
-	ctx := context.Background()
-
-	logger, conf, node, err := bootstrapper(ctx)
-	if err != nil {
-		return fmt.Errorf("error bootstrapping core services: %w", err)
-	}
-
-	container := initContainer(logger, conf, node)
-	container.cors()
-	container.routes()
-
+	api.New()
 	go func() {
 		container.startServer()
 	}()
@@ -82,6 +70,8 @@ func bootstrapper(ctx context.Context) (
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("unable to initialize the node: %w", err)
 	}
+
+	auth, err := auth2.Auth()
 	return loggerInstance, confInstance, node, nil
 }
 
@@ -95,15 +85,4 @@ func initContainer(logger *logrus.Logger,
 		node:       node,
 		ethAddress: node.Signer.EthereumAddress(),
 	}
-}
-
-func (c *Container) cors() {
-	c.router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"*"},
-		ExposedHeaders:   []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           int(12 * time.Hour),
-	}))
 }

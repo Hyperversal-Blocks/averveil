@@ -1,0 +1,63 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_DB: ${PG_DB}
+    volumes:
+      - "${POSTGRES_DATA}:/var/lib/postgresql/data"
+
+  emqx1:
+    image: emqx:5.1.6
+    container_name: emqx1
+    environment:
+      - "EMQX_NODE_NAME=emqx@node1.emqx.io"
+      - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=[emqx@node1.emqx.io,emqx@node2.emqx.io]"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    networks:
+      emqx-bridge:
+        aliases:
+          - node1.emqx.io
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 8883:8883
+      - 18083:18083
+    volumes:
+      - "${MQTT1_DATA}/emqx1_data:/opt/emqx/data"
+
+  emqx2:
+    image: emqx:5.1.6
+    container_name: emqx2
+    environment:
+      - "EMQX_NODE_NAME=emqx@node2.emqx.io"
+      - "EMQX_CLUSTER__DISCOVERY_STRATEGY=static"
+      - "EMQX_CLUSTER__STATIC__SEEDS=[emqx@node1.emqx.io,emqx@node2.emqx.io]"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    networks:
+      emqx-bridge:
+        aliases:
+          - node2.emqx.io
+    volumes:
+      - "${MQTT2_DATA}/emqx1_data:/opt/emqx/data"
+
+networks:
+  emqx-bridge:
+    driver: bridge
