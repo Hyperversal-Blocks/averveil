@@ -5,3 +5,6 @@ env
 coverage.out
 logrus.log
 ./pkg/logger/logrus.log
+testnet.yaml
+data
+.log

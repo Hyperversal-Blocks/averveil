@@ -9,11 +9,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func New(ctx context.Context, logger *logrus.Logger) (Store, error) {
-	db, err := badger.Open(badger.DefaultOptions("/data/db").WithLogger(logger))
+func New(ctx context.Context, logger *logrus.Logger,
+	path string, inMem, logging bool) (Store, error) {
+	var badgerOpts badger.Options
+	if inMem {
+		badgerOpts = badger.DefaultOptions("").WithInMemory(inMem)
+	} else {
+		badgerOpts = badger.DefaultOptions(path)
+	}
+
+	if logging {
+		badgerOpts = badgerOpts.WithLogger(logger)
+	}
+
+	db, err := badger.Open(badgerOpts)
 	if err != nil {
 		return nil, fmt.Errorf("error bootstrapping badgerDB: %w", err)
 	}
+
 	return &store{db: db, m: &sync.Mutex{}}, nil
 }
 

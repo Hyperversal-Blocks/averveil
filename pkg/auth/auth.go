@@ -11,16 +11,18 @@ import (
 	"github.com/hyperversalblocks/averveil/pkg/jwt"
 	"github.com/hyperversalblocks/averveil/pkg/signer"
 	"github.com/hyperversalblocks/averveil/pkg/store"
+	"github.com/hyperversalblocks/averveil/pkg/user"
 )
 
 type auth struct {
-	Signer signer.Signer
-	Store  store.Store
-	JWT    jwt.JWT
+	Signer      signer.Signer
+	Store       store.Store
+	JWT         jwt.JWT
+	userService user.Service
 }
 
-func New(signer signer.Signer, store store.Store, JWT jwt.JWT) Auth {
-	return &auth{Signer: signer, Store: store, JWT: JWT}
+func New(signer signer.Signer, store store.Store, JWT jwt.JWT, userService user.Service) Auth {
+	return &auth{Signer: signer, Store: store, JWT: JWT, userService: userService}
 }
 
 type Challenge struct {
@@ -54,6 +56,7 @@ func (a *auth) GetChallenge(publicKey []byte) (*Challenge, error) {
 		return nil, fmt.Errorf("unable to encrypt and get hash: %w", err)
 	}
 
+	// TODO: add ttl
 	obj, err := json.Marshal(&StoredChallenge{
 		Ciphered: hex.EncodeToString(cipheredText),
 		Nonce:    hex.EncodeToString(nonce),

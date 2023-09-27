@@ -8,7 +8,6 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/sirupsen/logrus"
 
-	"github.com/hyperversalblocks/averveil/configuration"
 	"github.com/hyperversalblocks/averveil/pkg/signer"
 	"github.com/hyperversalblocks/averveil/pkg/transaction"
 )
@@ -20,13 +19,13 @@ type Node struct {
 }
 
 // InitNode initializes the node with passed configs
-func InitNode(ctx context.Context, config configuration.Config, logger *logrus.Logger) (*Node, error) {
-	rpcClient, err := Init(ctx, config.Chain.Endpoint)
+func InitNode(ctx context.Context, privateKey, endpoint string, logger *logrus.Logger) (*Node, error) {
+	rpcClient, err := Init(ctx, endpoint)
 	if err != nil {
 		return nil, fmt.Errorf("InitNode: unable to initialize rpcClient: %w", err)
 	}
 
-	owner, err := signer.New(config.Chain.PrivateKey)
+	owner, err := signer.New(privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("InitNode: unable to initialize signer: %w", err)
 	}

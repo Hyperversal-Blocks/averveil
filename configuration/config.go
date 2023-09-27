@@ -33,6 +33,11 @@ type Config struct {
 		Issuer string `mapstructure:"ISSUER"`
 		Expiry int64  `mapstructure:"EXPIRY"`
 	} `mapStructure:"JWT"`
+	Store struct {
+		Path    string `mapstructure:"PATH"`
+		InMem   bool   `mapstructure:"IN_MEM"`
+		Logging bool   `mapstructure:"LOGGING"`
+	} `mapstructure:"STORE"`
 }
 
 func Init() (*Config, error) {
