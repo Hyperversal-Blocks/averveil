@@ -62,12 +62,12 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 		return nil, fmt.Errorf("error bootstrapping logger: %w", err)
 	}
 
-	storer, err := store.New(ctx, loggerInstance)
+	storer, err := store.New(ctx, loggerInstance, confInstance.Store.Path, confInstance.Store.InMem, confInstance.Store.Logging)
 	if err != nil {
 		return nil, fmt.Errorf("error bootstrapping store: %w", err)
 	}
 
-	node, err := node.InitNode(ctx, *confInstance, loggerInstance)
+	node, err := node.InitNode(ctx, confInstance.Chain.PrivateKey, confInstance.Chain.Endpoint, loggerInstance)
 	if err != nil {
 		return nil, fmt.Errorf("unable to initialize the node: %w", err)
 	}
@@ -76,9 +76,10 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 		confInstance.JWT.Issuer,
 		confInstance.JWT.Expiry)
 
-	authService := auth.New(node.Signer, storer, jwt)
-
 	userService := user.New(storer, loggerInstance, node.Signer.EthereumAddress())
+
+	authService := auth.New(node.Signer, storer, jwt, userService)
+
 	apiService := api.New(loggerInstance, chi.NewMux(), authService, userService, node, jwt)
 
 	return &Services{
