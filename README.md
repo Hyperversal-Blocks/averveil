@@ -2,143 +2,258 @@
 
 ![hackmd-github-sync-badge](https://hackmd.io/6kXvWxo7RXKp1RcMFpWlbQ/badge)
 
+## Introduction
+### Purpose
+The purpose of this Software Requirement Specification (SRS) document is to provide a comprehensive and detailed description of the technical specifications and functionalities of "Averveil". This document aims to facilitate a clear understanding of the system's architecture, features, requirements, and the problems it intends to solve in the domain of data privacy and control. It serves as a foundational agreement between stakeholders and developers, ensuring that both parties have aligned expectations regarding the system’s capabilities, features, and limitations.
 
-## Overview
-Within the realm of Hyperversal Blocks, Averveil is a multiverse comprising of multiple smaller universes(building blocks), each having their own goals and ambitions and could be plugged to any other system.
+Averveil is envisioned as a revolutionary platform that addresses pressing concerns about data ownership, privacy, and security in our increasingly digital society. By leveraging cutting-edge technologies like blockchain, zero-knowledge proofs (ZKP), and verifiable credentials, Averveil aims to empower users with greater control over their data, facilitate secure and transparent transactions through an escrow system, and incentivize data sharing while preserving privacy.
 
-Averveil facilitates secure communication between different entities, ensuring complete confidentiality through the use of zero-knowledge proofs (ZKP). This technology allows entities to interact and verify information without revealing any sensitive details, maintaining the privacy of all parties involved. Additionally, Averveil offers a versatile platform for entities to set conditions for intermediary involvement. It also provides a valuable solution for companies aiming to target communications accurately without compromising individual privacy, leveraging ZKP to reach the right audience.
+This document also outlines the proposed strategies for engagement, growth, monetization, and marketing to ensure the success and sustainability of the Averveil platform.
 
-### Miniverses
-Averveil primarily consists of these miniverses:
-- Escrow
-- ZkInsights
-- PillarBox
+### Scope
+The scope of this SRS encompasses the development and deployment of the Averveil platform, aimed at addressing challenges in data privacy and decentralized transactions. The platform will include a variety of features and systems, focusing on user profiles, data sharing incentives, verifiable proofs, and secure blockchain transactions. Additionally, the project will involve the creation of user interfaces, integration with various software and hardware, and attention to non-functional requirements such as performance, usability, and security. The SRS also outlines strategies for engagement, growth, monetization, and marketing, along with plans for continuous improvement and adaptations to meet future needs and developments in the field.
 
-### Wormholes
-Wormholes are the systems that will allow multiple universes or multiverses to connect or communicate with each other:
-- Node
-- DAO
+### Glossary
+ZKP - Zero knowledge proof
+AV - Averveil
+Node - One node amongst multiple nodes that can communicate with each other
 
-## Usecases of miniverses and wormholes in Averveil
+### References
+- [Authentication, Authorization, and Selective
+  Disclosure for IoT data sharing using Verifiable
+  Credentials and Zero-Knowledge Proofs](https://arxiv.org/pdf/2209.00586.pdf)
+- [BBS Sign](https://asecuritysite.com/golang/bbs_sign)
+- [BBS Signature Scheme](https://identity.foundation/bbs-signature/draft-irtf-cfrg-bbs-signatures.html)
+- [Arduino API Cloud](https://www.arduino.cc/reference/en/iot/api/)
+
+### Version
+*0.1.0*
+
+## Overall Description
+We are a data dependent society. Humans rely on data in our daily lives more than ever. We use data for everything from making decisions, staying informed, and connecting with others. Whether it's checking the weather, using GPS for directions, or scrolling through social media, data plays a crucial role in our modern society, shaping how we live and interact with the world around us.
+
+In our society, it is a common belief that data ownership is same as privacy but it is not. Just beacuse you own the data does not mean you get to keep it private. Yet, privacy is still your right.
+
+We also have frequent data breaches. In last few years, we can hear people saying that decentralization is the privacy but it is not.Decentralization is about not relying on one central authority, instead it is more like spreading the responsibilities across different entities.
+
+### Product Perspective
+### Product Features
+### User Classes and Characteristics
+
+## MVP Focus
+### Problem Statement
+When you use services, you often share your data willingly or unknowingly, like when visiting websites or using apps. While you may think your data is kept private, recent data breaches show it's not always the case; your information isn't as secure as you might believe.
+
+Similarly, thinking you're private just because you're decentralized isn't accurate. Decentralization means being more independent and responsible for your data, but it doesn't guarantee complete privacy.
+
+### Solution Hypothesis
+**Problem:** In today's world, data is incredibly important, but it's getting more complex and valuable. However, we often lack control over our data, and distinguishing real from fake data is difficult.
+
+**Solution:** We need a system that lets us decide who we share our data with, take responsibility for our choices, and even receive incentives for sharing. Additionally, if we choose to share it against some incentive, someone else should be able to verify the source of the data to provide some accountability.
+
+**Result:** With this approach, we can gain more control over our data, ensure its accuracy, and potentially benefit from sharing it while protecting our privacy and security.
+
+### MVP Definition
+A basic version of the data control and verification system that allows users to choose data sharing preferences, take responsibility for their data, receive incentives for sharing, and verify data accuracy. This MVP aims to provide essential functionality while serving as a foundation for future enhancements and features. Additionally, entities with whom data is shared can benefit from using the data, being able to verify the source and accuracy of data without actually being able to see the data.
+
+### Build-Measure-Learn-Loop
+1. **Build:** Start by developing the most basic version of your product or system that includes the core features necessary to solve the identified problem. This should be the MVP you defined.
+
+2. **Measure:** Once your MVP is built, release it to a small group of users or your target audience. Collect relevant data and feedback on how they interact with the MVP. This could include usage statistics, user feedback, and any other relevant metrics.
+
+3. **Learn:** Analyze the data and feedback you've gathered from the users. Pay attention to what's working well and what needs improvement. Identify any unexpected challenges or opportunities that arise from user interactions with the MVP.
+
+4. **Iterate:** Based on the insights and lessons learned, make necessary adjustments and improvements to your MVP. This could involve adding new features, refining existing ones, or addressing issues that users encountered.
+
+5. **Repeat:** Continue the cycle by releasing the updated MVP to a new group of users or the same group if appropriate. Repeat the process of measuring and learning, making incremental improvements each time.
+
+By using the MVP in the Build-Measure-Learn loop, we can gradually refine our product, ensuring it aligns more closely with user needs and preferences. This iterative approach helps us to avoid spending excessive time and resources on features that may not be valuable or necessary, ultimately increasing the chances of creating a successful and user-centered product.
+
+## System Features and Requirements
+<!-- ### Feature 1
+#### Description
+##### Priority
+#### Functional Requirements
+#### User Stories
+#### Validation Criteria -->
+
+### Node
+#### Description
+Node is a decentralized node-based system designed to facilitate the seamless operation of various services within the Averveil multiverse as well as other future multiverses.
+Node enables users to create their own user profiles and show proof of these profiles. This helps the Averveil ecosystem gather more information about users, allowing other entities to benefit from these insights. Nodes are rewarded with incentives for sharing this data. Nodes need to provide a verifiable proof which entities can verify.
+Averveil serves as a medium for entities and users in their communication. Nodes also have the responsibility of signing their data, which allows for tracing back to the source and ensures privacy.
+Nodes can link various sensors through an Arduino-based client. This data can be gathered, converted, and shared using verifible credentials and zero knowledge proofs with other entities. Averveil acts as the middleman for communication, verification, and validation. This approach draws inspiration from the ideas presented in this [paper](https://arxiv.org/pdf/2209.00586.pdf).
+
+##### Priority
+:star::star::star::star::star:
+
+#### Functional Requirements
+- Authentication and Authorization
+- Access Control
+- Blockchain Interface
+- Storage Interface
+   - Local Storage
+   - Swarm
+- Cryptography
+- ZKP
+- Signing Interface
+- Sensors Interface
+   - Transcoder
+   - Reciever
+   - Signer
+   - Prover
+- User Interface
+#### User Stories
+- As a user, I want to be able to control who can access my data and to what extent would this data be accessible.
+- I want to be able to prove to someone that some data `D` belongs to me or has been generated by me.
+- I want to be able to prove that the data I generated is correct and is signed by me.
+- I want to be incentivized for usage of my data.
+- I want to be able to connect different sensors with my node.
+- I want to be able to generate zero knowledge proofs about my data for validation purposes.
+#### Validation Criteria
+- I want to be able to own verificable credentials that link my data to me.
+- I want assurances that my data will be kept private and secure.
+- I want assurances that I will be incentivised.
+- I want assurances that only I can allow access to my data.
 
 ### Escrow
-#### Overview
+#### Description
 A blockchain based temporary legal arrangement between 2 transacting parties where a third party holds the financial payment.This innovative solution aims to provide a secure and transparent platform for facilitating transactions. By harnessing the power of blockchain technology, the app ensures that transactions are executed only when predetermined conditions are met, eliminating the need for traditional intermediaries and fostering a high level of trust among participants. This project aligns with the ethos of decentralization and self-executing smart contracts, contributing to a more efficient and equitable digital economy.
 
-#### Operational Framework and Technical Mechanics
-The project entails the creation of a sophisticated smart contract designed to seamlessly manage transactions involving parties. These transactions include both outbound payments and inbound receipts. An event trigger, such as the "buy now" action, prompts the deduction of the required payment from Party1's wallet. This payment is then securely routed to a designated Escrow account.
+##### Priority
+:star::star::star:
+#### Functional Requirements
+- Authorization and verification
+- User facing integration
+- Escrow service
+- Payments and commissions management
+- Conditional execution of transations
 
-The Escrow account functions as a vigilant intermediary, patiently awaiting the satisfaction of predetermined conditions. Once these conditions are met, the Escrow account dutifully facilitates the transfer of funds to Party2, culminating in the successful execution of the transaction.
+#### User Stories
+- I want to be able to send money to someone and they should be able to recieve the money.
+- The money should be recieved only if certain per-defined conditions are met.
+- If condtions are not met, I want my money returned to me.
 
-A notable aspect is the Escrow account's role in collecting a commission for its services. This commission is thoughtfully directed to a separate wallet, enhancing the financial dynamics of the system.
+#### Validation Criteria
+- User must be able to send and recieve money.
+- User must be able to define conditions for exchange of hands.
 
-Upon the accomplishment of the Minimum Viable Product (MVP) milestone for "Averveil," the commission takes on a new purpose. It becomes a source of equitable allocation under the purview of a Decentralized Autonomous Organization (DAO) managed by Chain Registrars (Custodians). These DAO custodians oversee the judicious distribution of funds, ensuring a fair and transparent disbursement process.
+### ZK-Insights
+#### Description
+##### Priority
+#### Functional Requirements
+#### User Stories
+#### Validation Criteria
 
-### ZkInsights
-ZkInsights aggregates information from diverse sources. Data is subjected to encryption protocols to formulate an encrypted dataset. The application then employs a zero-knowledge proof methodology to facilitate the dissemination of this encrypted information. The overarching goal is to enable secure and confidential data sharing among interconnected applications. By leveraging advanced zero-knowledge techniques, the application ensures that data can be shared without revealing its underlying contents, thereby safeguarding privacy and confidentiality.
+### ZK-Marketing
+#### Description
+##### Priority
+#### Functional Requirements
+#### User Stories
+#### Validation Criteria
 
-#### Operational Framework and Technical Mechanics
-The functioning process of ZkInsights involves the utilization of input structured in JSON format, presented as an object. This input is systematically processed within the framework of zero-knowledge proofs (ZKPs), ensuring that delicate details remain confidential. For instance, the ZKP technique can be utilized to validate an assertion, such as confirming an individual's legal age without revealing the actual age, accomplished through zk-SNARKs.
+### ZK-Reports
+#### Description
+##### Priority
+#### Functional Requirements
+#### User Stories
+#### Validation Criteria
 
-The incoming data, in its covert form, is skillfully parsed for further processing. The object's keys consistently adhere to plain English, facilitating a coherent and easily understandable structure.
+### ERC20 Token
+#### Description
+##### Priority
+#### Functional Requirements
+#### User Stories
+#### Validation Criteria
 
-This compilation of information then serves as the cornerstone for constructing a comprehensive dataset. This dataset is subsequently poised for distribution to marketing or analytics entities, functioning as a valuable resource that comes at a designated cost.
+### DAO
+#### Description
+##### Priority
+#### Functional Requirements
+#### User Stories
+#### Validation Criteria
 
-A fundamental aspect of the user experience is the empowerment extended to users regarding data sharing. Individuals possess the prerogative to withhold their data, exercising their right to decline participation. This pivotal choice is fortified through a verification mechanism, which relies on user signatures. These signatures are meticulously validated through dedicated wallet transactions, reinforcing the integrity of the user's decision.
+## Interface Requirements
+### User Interfaces
+- Website
+- Backend application
+- Mobile Application
+### Software Interfaces
+- API
+- MQTT Brokers
+- Docker
+- Blockchain (TBD) and Contracts
+- Arduino
+### Hardware Interfaces
+- Mobile phone
+- Computer or Laptop
+- Arduino with sensors
 
-### ZKLabels
-ZkLabels streamlines handling confidential data with zero-knowledge proofs, converting it into label-like structures for applications like shipping management. It enables planned sharing, notifying designated services promptly. Information gathered by ZKLabels can be destroyed based on predefined conditions or can be used to generate insights with explicit permission.
+## Non-Functional Requirements
+### Performance
+### Scalability
+### Usability
+### Security
 
-#### Operational Framework and Technical Mechanics
-ZkLabels comes into play by handling the information that has already been privacy-protected using zero-knowledge proofs (ZKPs). This information is transformed into specific pre-defined data structures, resembling labels, which can serve various purposes like organizing shipping details.
+<!-- ## Lean Metrics
+### Engagement
+### Growth
+### Monetization
+### Marketing
+ -->
 
-ZkLabel's role extends to guaranteeing that the sharing of information can be planned in advance. This means that if a particular service requires early notification about the presence of a specific label, it can effortlessly keep track using ZkInsights.
+## Lean Metrics
+### Engagement:
 
-In essence, ZkLabels works behind the scenes to arrange secure information, turning it into handy labels, and making sure that the process of sharing data is streamlined and well-managed.
+**Engagement Strategy:**
+Averveil plans to harness various online platforms to foster user interaction and brand commitment. Utilizing Discord for daily AMAs and LinkedIn for regular posts, Averveil aims to establish an informative dialogue with its audience. Blogging and newsletters will serve as educational tools, enlightening the community about Web3 based solutions.
 
-In future, the goal is to integrate AI so that instead of a pre-defined data structure, it can take in any information and convert it into any necessary structure.
+**KPIs for Engagement:**
+- Click-Through Rate (CTR)
+- Conversion Rate
+- Impressions
+- Bounce Rate
+- Ad Engagement
+- Mobile Performance
 
-### ZKTracker
-ZkTracker is a decentralized service that links encrypted and zk-proven addresses/locations (derived from GPS sensors) with registered shipping services. This connection occurs via blockchain. Couriers can scan ZkLabels-generated labels, revealing pinpoint GPS locations. Information gradually unfolds based on conditions; e.g., riders get broader details until meeting location requirements. This controlled disclosure maintains privacy, fostering efficient and secure distribution.
+### Growth:
 
-Information gathered by ZKTracker can be destroyed based on predefined conditions or can be used to generate insights with explicit permission from respective parties.
+**Growth Strategy:**
+To expand its user base and online presence, Averveil will employ SEO strategies, back-linking, and account growth plans on LinkedIn. The aim is to redirect traffic to Averveil’s main website and enhance online visibility. Paid advertisements on LinkedIn, Facebook, and Google will also play a pivotal role in driving targeted traffic and expanding awareness.
 
-#### Operational Framework and Technical Mechanics
-ZkTracker plays a pivotal role as a decentralized nexus, effectively connecting encrypted and zk-proven addresses/locations sourced from GPS sensors with an extensive network of registered shipping services. All interactions are underpinned by the secure framework of blockchain technology.
+**KPIs for Growth:**
+- Ad Position
+- Quality Score
+- Geographic Performance
+- Ad Schedule Performance
+- Brand Awareness
 
-Consider a scenario where a courier rider, representing a courier company, interacts with the system. By scanning a label generated by ZkLabels or a compatible service, the rider gains access to precise GPS coordinates. This seamless process significantly enhances the ability to trace and monitor shipments.
+### Monetization:
 
-The distinctive feature of ZkTracker lies in its nuanced information dissemination. The data flow unfolds progressively, offering insights into the shipment's trajectory. For instance, when a tracker initiates its journey from a different country, only generalized country information is accessible. As it reaches specific locales such as cities or towns, the granularity of information gradually increases, culminating in the provision of highly precise location details.
+**Monetization Strategy:**
+Averveil offers distinct products, each contributing to revenue generation. The pricing strategy is under development and will be communicated transparently as the project matures. The focus will be on providing value while ensuring the financial sustainability of the platform.
 
-Notably, the privacy mechanisms employed work in dual directions. While local riders can access evolving data about their area, they remain unable to backtrack and identify the parcel's originating location. This two-way privacy measure ensures a balanced and secure system where sensitive details are safeguarded. This approach reinforces secure and efficient distribution while maintaining a robust layer of privacy protection.
+**KPIs for Monetization:**
+- Return on Investment (ROI)
+- Cost Per Click (CPC)
+- Customer Acquisition Cost (CAC)
+- Customer Lifetime Value (CLV)
 
-ZkTracker can also provide analytics to other services like ZkInsights.
+### Marketing:
 
-### PillarBox
-Pillarbox, an essential network of sensors, is intricately woven into the fabric of Averveil. These sensors are indispensable to the Averveil system, actively engaged in each step of the order process and providing encrypted data crucial for various services. Averveil's functionality relies on this dynamic interaction, and in turn, Pillarbox gains significance from Averveil's integration. From validating labels to chronicling shipping progression and acting as a reservoir of contextual data from ZkTracker and ZkLabels, Pillarbox's symbiotic relationship with Averveil is the cornerstone of operational effectiveness and advancement in the blockchain domain. This system primarily gathers focused user-centric and product-centric information instead of general insights provided by ZkInsights.
+**Marketing Strategy:**
+Averveil’s marketing approach is multi-faceted, encompassing content sharing through LinkedIn, Discord, and blogs. The aim is to raise awareness, educate, and build trust within the digital ecosystem. Paid advertising on social media platforms and Google will enhance brand visibility and lead generation, with performance monitored through various KPIs.
 
-#### Operational Framework and Technical Mechanics
-Pillarbox, a network of intricately designed sensors, constitutes a foundational component of the Averveil system. These sensors are seamlessly registered within the Averveil architecture, playing a pivotal role in maintaining the system's functionality.
+**KPIs for Marketing:**
+- Conversion Value
+- Ad Copy and Design Testing
+- Ad Position Share
+- Ad Extensions
+- Impressions
 
-Every step of the order placement process involves direct communication with these sensors. They are an indispensable part of the process, ensuring that Averveil remains fully operational. The information gathered by these sensors is transmitted in a secure and encrypted format, serving as a valuable resource for various services within the Averveil ecosystem.
-
-Importantly, the interdependence is mutual. Pillarbox sensors are indispensable to Averveil, while the system's utilization enhances the capabilities of Pillarbox. During label generation, these sensors not only provide the vital signature for label validation but also chronicle the evolving state of shipping.
-
-Similarly, during ZkTracker's information dissemination, Pillarbox serves as a reservoir of comprehensive insights. This repository extends beyond what is shared through ZkTracker, capturing a wider spectrum of shipping-related data. This broader scope is attributed to Pillarbox's foundational role in initiating the process by providing the original address.
-
-In essence, Pillarbox's connection is essential, serving as a linchpin in the Averveil ecosystem. Its continuous interaction with Averveil is fundamental; the system relies on this integration for its core functionality. 
-
-### ChainRegister
-#### Overview
-Chain Register is a decentralized node-based system designed to facilitate the seamless operation of various services within the Averveil multiverse as well as other future multiverses. Node operators play a central role by booting up nodes that host a range of services, including those mentioned earlier (Escrow, ZkInsights, ZkLabels, ZkTracker, PillarBox) as well as additional essential services like Swarm and libp2p. These nodes collectively form the backbone of the Averveil ecosystem.
-
-#### Node Setup and Service Deployment
-Node operators take responsibility for initializing nodes within the Chain Register system. Upon booting up, nodes automatically instantiate instances of the specified services, ensuring their availability to network participants. This automated process includes the setup of in-memory databases and other requisite services. Node operators' participation in the system is incentivized through a rewards mechanism.
-
-#### Rewards Mechanism
-The rewards bestowed upon node operators are determined through a dual mechanism incorporating both traditional staking and liquidity pools. Node operators stake a certain amount of tokens to participate in the system. This stake signifies their commitment to the network's stability and security. Additionally, liquidity pools play a pivotal role by providing necessary liquidity to the ecosystem, ensuring its self-sufficiency. Rewards are proportionally allocated based on the staking amount and the contribution to liquidity pools.
-
-#### DAO-Managed Liquidity Pools
-To uphold transparency and trustlessness, liquidity pools are governed by a Decentralized Autonomous Organization (DAO). The DAO oversees the operation of these pools, ensuring that rewards are transferred fairly and efficiently. This collective management enhances the integrity of the liquidity provisioning process and safeguards against centralization. DAOs will also manage the funding of other services.
-
-#### Pluggable Architecture
-The Chain Register system is designed with a pluggable architecture, enabling easy integration of additional services. As the Averveil multiverse evolves and new services emerge, node operators can seamlessly incorporate these services into the existing infrastructure. This flexibility ensures that the system remains adaptable and future-proof.
-
-#### Multiverse Preference and Reward Customization
-Node operators are empowered to choose the specific multiverses they wish to connect with. This multiverse preference impacts their potential rewards. Operators that contribute to and serve the preferred multiverses receive rewards accordingly. This personalized approach fosters engagement and aligns incentives with operators' strategic choices.
-
-#### Data Collection, Storage, and Retrieval
-Node operators play a pivotal role in collecting, storing, and retrieving data from various services and smart contracts within the Averveil ecosystem. Data is securely stored using Swarm, a decentralized storage protocol. Operators ensure the availability and integrity of information, facilitating efficient retrieval and sharing as needed.
-
-The Chain Register system acts as a cohesive framework that harmonizes the operation of services, incentivizes node operators, and drives the sustainability and expansion of the Averveil multiverse.
-
-## Data that be stored on Swarm:
-Here are the points where data storage is involved where Swarm will be used as storage medium:
-
-1. **Escrow:**
-   - Data Collection: Transaction data, cost of transaction, sensor information, participant identities.
-   - Commission Record: Collection of commission in a separate wallet.
-   - Financial information and blockchain state.
-
-2. **ZkInsights:**
-   - Data Aggregation: Gathering data from diverse sources.
-   - Encrypted Dataset: Formulation of an encrypted dataset.
-   - Data Distribution: Distribution of the dataset to marketing or analytics entities and/or collecting their data.
-
-3. **ZkLabels:**
-   - Privacy-Protected Data Handling: Transformation of already privacy-protected data into predefined structures.
-   - Planned Information Sharing: Management of planned sharing of information.
-   - AI Integration (Future): Goal to integrate AI for flexible structure conversion.
-
-4. **ZkTracker:**
-   - Encrypted Address Integration: Linking encrypted and zk-proven addresses/locations with shipping services.
-   - Progressive Information Dissemination: Controlled disclosure of information as shipment progresses.
-   - Analytics Provision: Potential provision of analytics to other services like ZkInsights.
-
-5. **PillarBox:**
-   - Sensor Data Collection: Gathering of data such as location, timestamps, and status throughout the shipping process.
-   - Label Generation Support: Provision of signatures for validating labels generated by ZkLabels.
-   - Shipping State Chronicle: Recording and chronicling the evolving state of shipping.
+## Appendix
+### Assumptions and Dependencies
+### Future Iterations
 
 ## Quaterly Milestones Breakdown
 ### MVP
