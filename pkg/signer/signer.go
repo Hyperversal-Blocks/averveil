@@ -85,3 +85,7 @@ func (c *signer) SignTx(transaction *types.Transaction, chainID *big.Int) (*type
 
 	return signedTx, nil
 }
+
+// TODO: Implement BBS signatures for msg arrays:
+//  ref: https://identity.foundation/bbs-signature/draft-irtf-cfrg-bbs-signatures.html
+//  https://asecuritysite.com/golang/bbs_sign <---- instead use similar logic but funcs from ethereum
