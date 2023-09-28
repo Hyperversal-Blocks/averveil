@@ -6,17 +6,17 @@
 ## Overview
 Within the realm of Hyperversal Blocks, Averveil is a multiverse comprising of multiple smaller universes(building blocks), each having their own goals and ambitions and could be plugged to any other system.
 
+Averveil facilitates secure communication between different entities, ensuring complete confidentiality through the use of zero-knowledge proofs (ZKP). This technology allows entities to interact and verify information without revealing any sensitive details, maintaining the privacy of all parties involved. Additionally, Averveil offers a versatile platform for entities to set conditions for intermediary involvement. It also provides a valuable solution for companies aiming to target communications accurately without compromising individual privacy, leveraging ZKP to reach the right audience.
+
 ### Miniverses
 Averveil primarily consists of these miniverses:
 - Escrow
 - ZkInsights
-- ZkLabels
-- ZkTracker
 - PillarBox
 
 ### Wormholes
 Wormholes are the systems that will allow multiple universes or multiverses to connect or communicate with each other:
-- ChainRegister
+- Node
 - DAO
 
 ## Usecases of miniverses and wormholes in Averveil

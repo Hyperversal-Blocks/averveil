@@ -91,3 +91,5 @@ type Swarm interface {
 func New() Swarm {
 	return &swarm{}
 }
+
+// TODO: https://github.com/ethersphere/bee/tree/master/openapi

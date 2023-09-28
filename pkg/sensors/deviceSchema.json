@@ -1,0 +1,17 @@
+{
+  "schema": {
+    "dht22": {
+      "deviceID": "",
+      "measurements": {
+        "temp": {
+          "time": [],
+          "value": []
+        },
+        "humidity": {
+          "time": [],
+          "value": []
+        }
+      }
+    }
+  }
+}
