@@ -37,8 +37,25 @@ In our society, it is a common belief that data ownership is same as privacy but
 We also have frequent data breaches. In last few years, we can hear people saying that decentralization is the privacy but it is not.Decentralization is about not relying on one central authority, instead it is more like spreading the responsibilities across different entities.
 
 ### Product Perspective
+This product is supposed to be an open-source. It is a node based system (via web interface) that allows users to participate in the Averveil ecosystem.
+
 ### Product Features
+Node: A node based system that allows users to participate in the Averveil ecosystem by connecting to it.
+Escrow: A service that allows transaction amongst 2 parties with the help of a third party where third party acts as keeper of the funds.
+ZK-Insights: Service that collects the information from nodes and other services to create insights on them.
+ZK-Marketing: Service that allows companies to show ads to nodes without having any knowledge of them
+ZK-Report: TBD
+DAO: Responsible for making decisions on behalf of the system.
+
 ### User Classes and Characteristics
+Node operators:
+- Help the ecosystem run.
+- Provide with data from various data sources.
+- Are active users who engage with system to make use of different services.
+
+Business Users:
+- They can have multiple goals e.g. they might want to serve ads to users.
+- Responsible for the direct payments to the ecosystem and are considered bulk or big buyers of native token.
 
 ## MVP Focus
 ### Problem Statement
@@ -135,11 +152,12 @@ A blockchain based temporary legal arrangement between 2 transacting parties whe
 - If condtions are not met, I want my money returned to me.
 
 #### Validation Criteria
-- User must be able to send and recieve money.
+- User must be able to send and receive money.
 - User must be able to define conditions for exchange of hands.
 
 ### ZK-Insights
 #### Description
+
 ##### Priority
 #### Functional Requirements
 #### User Stories
