@@ -8,8 +8,8 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/sirupsen/logrus"
 
-	"averveil/pkg/signer"
-	"averveil/pkg/transaction"
+	"github.com/hyperversal-blocks/averveil/pkg/signer"
+	"github.com/hyperversal-blocks/averveil/pkg/transaction"
 )
 
 type Node struct {

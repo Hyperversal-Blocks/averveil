@@ -6,7 +6,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"averveil/configuration"
+	"github.com/hyperversal-blocks/averveil/configuration"
 )
 
 var filepath = "./pkg/logger/.log"

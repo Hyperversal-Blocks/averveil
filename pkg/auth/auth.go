@@ -8,10 +8,10 @@ import (
 
 	"github.com/google/uuid"
 
-	"averveil/pkg/jwt"
-	"averveil/pkg/signer"
-	"averveil/pkg/store"
-	"averveil/pkg/user"
+	"github.com/hyperversal-blocks/averveil/pkg/jwt"
+	"github.com/hyperversal-blocks/averveil/pkg/signer"
+	"github.com/hyperversal-blocks/averveil/pkg/store"
+	"github.com/hyperversal-blocks/averveil/pkg/user"
 )
 
 type auth struct {

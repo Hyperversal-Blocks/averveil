@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"averveil/cmd/server"
+	"github.com/hyperversal-blocks/averveil/cmd/server"
 )
 
 func main() {

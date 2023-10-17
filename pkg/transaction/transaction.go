@@ -14,7 +14,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"averveil/pkg/signer"
+	"github.com/hyperversal-blocks/averveil/pkg/signer"
 )
 
 var (

@@ -8,14 +8,14 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 
-	"averveil/configuration"
-	"averveil/pkg/api"
-	"averveil/pkg/auth"
-	jwtPkg "averveil/pkg/jwt"
-	"averveil/pkg/logger"
-	"averveil/pkg/node"
-	"averveil/pkg/store"
-	"averveil/pkg/user"
+	"github.com/hyperversal-blocks/averveil/configuration"
+	"github.com/hyperversal-blocks/averveil/pkg/api"
+	"github.com/hyperversal-blocks/averveil/pkg/auth"
+	jwtPkg "github.com/hyperversal-blocks/averveil/pkg/jwt"
+	"github.com/hyperversal-blocks/averveil/pkg/logger"
+	"github.com/hyperversal-blocks/averveil/pkg/node"
+	"github.com/hyperversal-blocks/averveil/pkg/store"
+	"github.com/hyperversal-blocks/averveil/pkg/user"
 )
 
 type Services struct {

@@ -1,6 +1,6 @@
 package sensors
 
-import "averveil/pkg/signer"
+import "github.com/hyperversal-blocks/averveil/pkg/signer"
 
 type transcoder struct {
 	signer signer.Signer

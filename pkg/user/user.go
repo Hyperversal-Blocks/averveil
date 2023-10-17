@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/sirupsen/logrus"
 
-	"averveil/pkg/store"
+	"github.com/hyperversal-blocks/averveil/pkg/store"
 )
 
 type profile struct {
