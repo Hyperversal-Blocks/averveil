@@ -1,6 +1,8 @@
 package configuration
 
 import (
+	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -49,10 +51,15 @@ func Init() (*Config, error) {
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error discovering config: %w", err)
 	}
+
 	config := Config{}
+
 	err = viper.Unmarshal(&config)
+	if err != nil {
+		return nil, fmt.Errorf("error unmarshalling config: %w", err)
+	}
 
 	return &config, nil
 }
