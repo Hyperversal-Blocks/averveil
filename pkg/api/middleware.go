@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hyperversalblocks/averveil/pkg/jwt"
+	"averveil/pkg/jwt"
 )
 
 func (s *Services) ValidateToken(next http.Handler) http.Handler {

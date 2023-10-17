@@ -1,7 +1,7 @@
 package sensors
 
 import (
-	"github.com/hyperversalblocks/averveil/pkg/store"
+	"averveil/pkg/store"
 )
 
 type client struct {

@@ -7,10 +7,10 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/hyperversalblocks/averveil/pkg/auth"
-	jwtPkg "github.com/hyperversalblocks/averveil/pkg/jwt"
-	"github.com/hyperversalblocks/averveil/pkg/node"
-	"github.com/hyperversalblocks/averveil/pkg/user"
+	"averveil/pkg/auth"
+	jwtPkg "averveil/pkg/jwt"
+	"averveil/pkg/node"
+	"averveil/pkg/user"
 )
 
 type Services struct {

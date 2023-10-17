@@ -1,4 +1,4 @@
-module github.com/hyperversalblocks/averveil
+module averveil
 
 go 1.20
 

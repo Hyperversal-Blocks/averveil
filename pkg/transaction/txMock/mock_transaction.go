@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/pkg/errors"
 
-	"github.com/hyperversalblocks/averveil/pkg/transaction"
+	"averveil/pkg/transaction"
 )
 
 type transactionServiceMock struct {
