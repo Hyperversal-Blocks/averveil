@@ -23,16 +23,21 @@ func (s *swarm) CheckNodeHealthAndReadiness() error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer res.Body.Close()
+
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
 		log.Fatal(err)
 	}
+
 	m := make(map[string]string)
+	
 	_ = json.Unmarshal(body, &m)
 	if m["status"] == "ok" {
 		fmt.Println("is ok")
 	}
+
 	return nil
 }
 
@@ -76,6 +81,11 @@ func (s *swarm) Fetch() error {
 	panic("implement me")
 }
 
+func (s *swarm) GetBalance() error {
+	// TODO implement me
+	panic("implement me")
+}
+
 type Swarm interface {
 	CheckNodeHealthAndReadiness() error
 	BuyPostageStamp() error
@@ -86,6 +96,7 @@ type Swarm interface {
 	GetTransactions() error
 	Upload() error
 	Fetch() error
+	GetBalance() error
 }
 
 func New() Swarm {
