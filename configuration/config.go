@@ -12,10 +12,10 @@ type Config struct {
 		Endpoint   string `mapstructure:"ENDPOINT"`
 	} `mapstructure:"CHAIN"`
 	Contracts struct {
-		ExampleContract struct {
+		HBLOCK struct {
 			Address string      `mapstructure:"ADDRESS"`
 			ABI     interface{} `mapstructure:"ABI"`
-		} `mapstructure:"EXAMPLE_CONTRACT"`
+		} `mapstructure:"HBLOCK"`
 	} `mapstructure:"CONTRACTS"`
 	Logger struct {
 		Level int    `mapstructure:"LEVEL"`

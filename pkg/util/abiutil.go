@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -22,4 +23,23 @@ func ContractParser(address string, jsonABI interface{}) (common.Address, abi.AB
 	}
 
 	return common.HexToAddress(address), jsonToABI, nil
+}
+
+func WriteJson(w http.ResponseWriter, v interface{}, statusCode int) {
+	w.Header().Set("Content-Type", "application/json")
+	marshalledJson, e := json.MarshalIndent(v, "", "    ")
+	if e != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		err := json.NewEncoder(w).Encode(fmt.Errorf("unable to marshall json"))
+		if err != nil {
+			return
+		}
+		return
+	}
+
+	w.WriteHeader(statusCode)
+	_, err := w.Write(marshalledJson)
+	if err != nil {
+		return
+	}
 }

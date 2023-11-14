@@ -11,11 +11,13 @@ import (
 	"github.com/hyperversal-blocks/averveil/configuration"
 	"github.com/hyperversal-blocks/averveil/pkg/api"
 	"github.com/hyperversal-blocks/averveil/pkg/auth"
+	"github.com/hyperversal-blocks/averveil/pkg/hblock"
 	jwtPkg "github.com/hyperversal-blocks/averveil/pkg/jwt"
 	"github.com/hyperversal-blocks/averveil/pkg/logger"
 	"github.com/hyperversal-blocks/averveil/pkg/node"
 	"github.com/hyperversal-blocks/averveil/pkg/store"
 	"github.com/hyperversal-blocks/averveil/pkg/user"
+	"github.com/hyperversal-blocks/averveil/pkg/util"
 )
 
 type Services struct {
@@ -76,11 +78,22 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 		confInstance.JWT.Issuer,
 		confInstance.JWT.Expiry)
 
+	// Bootstrapping Services
 	userService := user.New(storer, loggerInstance, node.Signer.EthereumAddress())
 
 	authService := auth.New(node.Signer, storer, jwt, userService)
 
-	apiService := api.New(loggerInstance, chi.NewMux(), authService, userService, node, jwt)
+	address, abi, err := util.ContractParser(confInstance.Contracts.HBLOCK.Address, confInstance.Contracts.HBLOCK.ABI)
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse the HBLOCK contract: %w", err)
+	}
+
+	hblockContractService := hblock.New(&node.TxService, node.Signer.EthereumAddress(), loggerInstance, address, abi)
+
+	// Bootstrapping Controllers
+	userController := api.NewUserController(loggerInstance, hblockContractService)
+
+	apiService := api.New(loggerInstance, chi.NewMux(), authService, userController, node, jwt)
 
 	return &Services{
 		config: confInstance,
