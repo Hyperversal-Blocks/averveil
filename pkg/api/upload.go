@@ -34,6 +34,8 @@ func (u *upload) CSV(w http.ResponseWriter, r *http.Request) {
 
 	fileName := r.FormValue("name")
 
+	// TODO: add logic to overwrite existing data if true, append to existing data or create new copy
+
 	reader := csv.NewReader(file)
 
 	// Process each row
@@ -64,6 +66,7 @@ func (u *upload) CSV(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the file was empty
 	if fileIsEmpty {
+		u.logger.Error("CSV file is empty")
 		WriteJson(w, "CSV file is empty", http.StatusBadRequest)
 		return
 	}
