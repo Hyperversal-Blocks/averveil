@@ -33,6 +33,7 @@ func (u *view) CSV(w http.ResponseWriter, r *http.Request) {
 
 	data, err := u.store.Get(fileName)
 	if err != nil {
+		// TODO: add cases for key not found
 		u.logger.Error("internal server error: ", err)
 		WriteJson(w, "internal server error", http.StatusInternalServerError)
 		return
