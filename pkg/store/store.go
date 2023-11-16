@@ -1,7 +1,6 @@
 package store
 
 import (
-	"context"
 	"fmt"
 	"sync"
 
@@ -9,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func New(ctx context.Context, logger *logrus.Logger,
+func New(logger *logrus.Logger,
 	path string, inMem, logging bool) (Store, error) {
 	var badgerOpts badger.Options
 	if inMem {

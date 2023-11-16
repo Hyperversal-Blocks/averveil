@@ -66,6 +66,11 @@ type User struct {
 	PubKey  string  `json:"pubKey"`
 }
 
+type Metadata struct {
+	//
+	//
+}
+
 type Address struct {
 	City       string `json:"city,omitempty"`
 	Country    string `json:"country,omitempty"`

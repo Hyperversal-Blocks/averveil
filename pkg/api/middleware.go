@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/hyperversal-blocks/averveil/pkg/jwt"
-	"github.com/hyperversal-blocks/averveil/pkg/util"
 )
 
 func (s *Services) ValidateToken(next http.Handler) http.Handler {
@@ -47,7 +46,7 @@ func (s *Services) HBLOCKAccessHandler() http.Handler {
 		if !s.hblockSemaphore.TryAcquire(1) {
 			s.logger.Debug("hblock access: simultaneous on-chain operations not supported")
 			s.logger.Error(nil, "hblock access: simultaneous on-chain operations not supported")
-			util.WriteJson(w, "simultaneous on-chain operations not supported", http.StatusTooManyRequests)
+			WriteJson(w, "simultaneous on-chain operations not supported", http.StatusTooManyRequests)
 			return
 		}
 		defer s.hblockSemaphore.Release(1)

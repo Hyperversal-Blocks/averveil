@@ -6,7 +6,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/hyperversal-blocks/averveil/pkg/hblock"
-	"github.com/hyperversal-blocks/averveil/pkg/util"
 )
 
 func NewUserController(logger *logrus.Logger, hblock hblock.Contract) User {
@@ -29,9 +28,9 @@ func (u *user) GetBalance(w http.ResponseWriter, r *http.Request) {
 	balance, err := u.hblock.GetBalance(r.Context())
 	if err != nil {
 		u.logger.Error("internal server error: ", err)
-		util.WriteJson(w, "internal server error", http.StatusInternalServerError)
+		WriteJson(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
 
-	util.WriteJson(w, balance, http.StatusOK)
+	WriteJson(w, balance, http.StatusOK)
 }

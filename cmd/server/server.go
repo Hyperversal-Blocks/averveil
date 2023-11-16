@@ -64,7 +64,7 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 		return nil, fmt.Errorf("error bootstrapping logger: %w", err)
 	}
 
-	storer, err := store.New(ctx, loggerInstance, confInstance.Store.Path, confInstance.Store.InMem, confInstance.Store.Logging)
+	storer, err := store.New(loggerInstance, confInstance.Store.Path, confInstance.Store.InMem, confInstance.Store.Logging)
 	if err != nil {
 		return nil, fmt.Errorf("error bootstrapping store: %w", err)
 	}
@@ -93,7 +93,11 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 	// Bootstrapping Controllers
 	userController := api.NewUserController(loggerInstance, hblockContractService)
 
-	apiService := api.New(loggerInstance, chi.NewMux(), authService, userController, node, jwt)
+	uploadController := api.NewUploadController(loggerInstance, storer)
+
+	viewController := api.NewViewController(loggerInstance, storer)
+
+	apiService := api.New(loggerInstance, chi.NewMux(), authService, userController, node, jwt, uploadController, viewController)
 
 	return &Services{
 		config: confInstance,

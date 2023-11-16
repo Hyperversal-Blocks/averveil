@@ -23,6 +23,14 @@ func (s *Services) Routes() {
 		s.HBLOCKAccessHandler()
 		r.Get("/get", s.user.GetBalance)
 	})
+
+	s.router.Route("/upload", func(r chi.Router) {
+		r.Post("/csv", s.upload.CSV)
+	})
+
+	s.router.Route("/view", func(r chi.Router) {
+		r.Get("/csv", s.view.CSV)
+	})
 }
 
 func (s *Services) GetRouter() *chi.Mux {

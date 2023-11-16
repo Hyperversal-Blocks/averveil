@@ -14,6 +14,8 @@ type Services struct {
 	logger     *logrus.Logger
 	router     *chi.Mux
 	auth       auth.Auth
+	upload     Upload
+	view       View
 	user       User
 	node       *node.Node
 	jwtService jwtPkg.JWT
@@ -21,7 +23,7 @@ type Services struct {
 	hblockSemaphore *semaphore.Weighted
 }
 
-func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node *node.Node, jwtService jwtPkg.JWT) *Services {
+func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node *node.Node, jwtService jwtPkg.JWT, data Upload, view View) *Services {
 	return &Services{
 		logger:          logger,
 		router:          router,
@@ -30,5 +32,7 @@ func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node
 		jwtService:      jwtService,
 		hblockSemaphore: semaphore.NewWeighted(1),
 		user:            user,
+		upload:          data,
+		view:            view,
 	}
 }
