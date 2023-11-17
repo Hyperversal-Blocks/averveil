@@ -28,7 +28,12 @@ type Services struct {
 	api    *api.Services
 }
 
-func Init() error {
+func Init(desktopConfig bool) error {
+	if desktopConfig {
+		// TODO: Add logic for when config will be set from frontend
+		// TODO: move server init to pkg
+	}
+
 	services, err := bootstrapper(context.Background())
 	if err != nil {
 		return err

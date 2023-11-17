@@ -40,6 +40,9 @@ type Config struct {
 		InMem   bool   `mapstructure:"IN_MEM"`
 		Logging bool   `mapstructure:"LOGGING"`
 	} `mapstructure:"STORE"`
+	Arduino struct {
+		Key string `mapstructure:"API_KEY"`
+	} `mapstructure:"ARDUINO"`
 }
 
 func Init() (*Config, error) {
