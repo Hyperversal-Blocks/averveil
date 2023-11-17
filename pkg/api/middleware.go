@@ -18,7 +18,7 @@ func (s *Services) ValidateToken(next http.Handler) http.Handler {
 
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 
-		info, err := s.jwtService.ValidateToken(token)
+		info, err := s.jwt.ValidateToken(token)
 		if err != nil {
 			http.Error(w, "token expired", http.StatusUnauthorized)
 			return

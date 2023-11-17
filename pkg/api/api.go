@@ -11,14 +11,14 @@ import (
 )
 
 type Services struct {
-	logger     *logrus.Logger
-	router     *chi.Mux
-	auth       auth.Auth
-	upload     Upload
-	view       View
-	user       User
-	node       *node.Node
-	jwtService jwtPkg.JWT
+	logger *logrus.Logger
+	router *chi.Mux
+	auth   auth.Auth
+	upload Upload
+	view   View
+	user   User
+	node   *node.Node
+	jwt    jwtPkg.JWT
 
 	hblockSemaphore *semaphore.Weighted
 }
@@ -29,7 +29,7 @@ func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node
 		router:          router,
 		auth:            auth,
 		node:            node,
-		jwtService:      jwtService,
+		jwt:             jwtService,
 		hblockSemaphore: semaphore.NewWeighted(1),
 		user:            user,
 		upload:          data,

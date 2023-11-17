@@ -24,3 +24,9 @@ func WriteJson(w http.ResponseWriter, v interface{}, statusCode int) {
 		return
 	}
 }
+
+type outputDTO struct {
+	Message   string      `json:"message"`
+	Data      interface{} `json:"data"`
+	Timestamp string      `json:"timestamp"`
+}

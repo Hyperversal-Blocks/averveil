@@ -16,8 +16,10 @@ import (
 	"github.com/hyperversal-blocks/averveil/pkg/logger"
 	"github.com/hyperversal-blocks/averveil/pkg/node"
 	"github.com/hyperversal-blocks/averveil/pkg/store"
+	"github.com/hyperversal-blocks/averveil/pkg/upload"
 	"github.com/hyperversal-blocks/averveil/pkg/user"
 	"github.com/hyperversal-blocks/averveil/pkg/util"
+	"github.com/hyperversal-blocks/averveil/pkg/view"
 )
 
 type Services struct {
@@ -90,12 +92,15 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 
 	hblockContractService := hblock.New(&node.TxService, node.Signer.EthereumAddress(), loggerInstance, address, abi)
 
+	uploadService := upload.NewUploadService(loggerInstance, storer)
+
+	viewService := view.NewViewService(loggerInstance, storer)
 	// Bootstrapping Controllers
 	userController := api.NewUserController(loggerInstance, hblockContractService)
 
-	uploadController := api.NewUploadController(loggerInstance, storer)
+	uploadController := api.NewUploadController(loggerInstance, uploadService)
 
-	viewController := api.NewViewController(loggerInstance, storer)
+	viewController := api.NewViewController(loggerInstance, viewService)
 
 	apiService := api.New(loggerInstance, chi.NewMux(), authService, userController, node, jwt, uploadController, viewController)
 
