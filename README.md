@@ -6,7 +6,7 @@
 ### Purpose
 The purpose of this Software Requirement Specification (SRS) document is to provide a comprehensive and detailed description of the technical specifications and functionalities of "Averveil". This document aims to facilitate a clear understanding of the system's architecture, features, requirements, and the problems it intends to solve in the domain of data privacy and control. It serves as a foundational agreement between stakeholders and developers, ensuring that both parties have aligned expectations regarding the system’s capabilities, features, and limitations.
 
-Averveil is envisioned as a revolutionary platform that addresses pressing concerns about data ownership, privacy, and security in our increasingly digital society. By leveraging cutting-edge technologies like blockchain, zero-knowledge proofs (ZKP), and verifiable credentials, Averveil aims to empower users with greater control over their data, facilitate secure and transparent transactions through an escrow system, and incentivize data sharing while preserving privacy.
+Averveil is envisioned as a revolutionary platform that addresses pressing concerns about data ownership, privacy, and security in our increasingly digital society. By leveraging cutting-edge technologies like blockchain, zero-knowledge proofs (ZKP), Swarm and verifiable credentials, Averveil aims to empower users with greater control over their data, facilitate secure and transparent transactions through an escrow system, and incentivize data sharing while preserving privacy.
 
 This document also outlines the proposed strategies for engagement, growth, monetization, and marketing to ensure the success and sustainability of the Averveil platform.
 
