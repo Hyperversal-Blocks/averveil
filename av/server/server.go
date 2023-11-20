@@ -32,6 +32,7 @@ func Init(desktopConfig bool) error {
 	if desktopConfig {
 		// TODO: Add logic for when config will be set from frontend
 		// TODO: move server init to pkg
+		// TODO: re-design config and bootstrapper logic
 	}
 
 	services, err := bootstrapper(context.Background())
