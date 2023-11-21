@@ -5,8 +5,6 @@ import (
 	"strconv"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/hyperversal-blocks/averveil/configuration"
 )
 
 var filepath = "./pkg/logger/.log"
@@ -17,13 +15,13 @@ type loggerService struct {
 	logger *logrus.Logger
 }
 
-func Init(configService *configuration.Config) *logrus.Logger {
+func Init(level int, env string) *logrus.Logger {
 
 	// setting the format of the logs to be a JSON one
 	logger_instance.SetFormatter(&logrus.JSONFormatter{PrettyPrint: true})
 
 	// getting the log level set in the configuration file
-	logLevel, err := logrus.ParseLevel(strconv.Itoa(configService.Logger.Level))
+	logLevel, err := logrus.ParseLevel(strconv.Itoa(level))
 	// If the log level in conf file can't be parsed, log level should be the default info level
 	if err != nil {
 		logLevel = logrus.InfoLevel
@@ -31,7 +29,7 @@ func Init(configService *configuration.Config) *logrus.Logger {
 	// setting the log level
 	logger_instance.SetLevel(logLevel)
 
-	if configService.Logger.Env == "local" { // If we want to throw logs into a local file
+	if env == "local" { // If we want to throw logs into a local file
 
 		logger_instance.SetOutput(os.Stdout)
 		// setting it to a file writer

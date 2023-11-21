@@ -10,7 +10,7 @@ import (
 	"github.com/hyperversal-blocks/averveil/pkg/node"
 )
 
-type Services struct {
+type Api struct {
 	logger *logrus.Logger
 	router *chi.Mux
 	auth   auth.Auth
@@ -23,8 +23,8 @@ type Services struct {
 	hblockSemaphore *semaphore.Weighted
 }
 
-func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node *node.Node, jwtService jwtPkg.JWT, data Upload, view View) *Services {
-	return &Services{
+func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node *node.Node, jwtService jwtPkg.JWT, data Upload, view View) *Api {
+	return &Api{
 		logger:          logger,
 		router:          router,
 		auth:            auth,

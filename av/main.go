@@ -4,16 +4,16 @@ import (
 	"log"
 
 	"github.com/hyperversal-blocks/averveil/av/cmd"
-	"github.com/hyperversal-blocks/averveil/av/server"
+	"github.com/hyperversal-blocks/averveil/pkg/api"
 )
 
 func main() {
-	desktopConfig, err := cmd.Execute()
+	err := cmd.Execute()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := server.Init(desktopConfig); err != nil {
+	if err := api.Init(); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -7,8 +7,8 @@ import (
 	"github.com/go-chi/cors"
 )
 
-func (s *Services) Cors() {
-	s.router.Use(cors.Handler(cors.Options{
+func (a *Api) Cors() {
+	a.router.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
@@ -18,21 +18,25 @@ func (s *Services) Cors() {
 	}))
 }
 
-func (s *Services) Routes() {
-	s.router.Route("/balance", func(r chi.Router) {
-		s.HBLOCKAccessHandler()
-		r.Get("/get", s.user.GetBalance)
+func (a *Api) Routes() {
+	a.router.Route("/balance", func(r chi.Router) {
+		a.HBLOCKAccessHandler()
+		r.Get("/get", a.user.GetBalance)
 	})
 
-	s.router.Route("/upload", func(r chi.Router) {
-		r.Post("/csv", s.upload.CSV)
+	a.router.Route("/upload", func(r chi.Router) {
+		r.Post("/csv", a.upload.CSV)
 	})
 
-	s.router.Route("/view", func(r chi.Router) {
-		r.Get("/csv", s.view.CSV)
+	a.router.Route("/config", func(r chi.Router) {
+		r.Get("/", a.user.GetConfig)
+	})
+
+	a.router.Route("/view", func(r chi.Router) {
+		r.Get("/csv", a.view.CSV)
 	})
 }
 
-func (s *Services) GetRouter() *chi.Mux {
-	return s.router
+func (a *Api) GetRouter() *chi.Mux {
+	return a.router
 }

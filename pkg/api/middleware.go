@@ -8,7 +8,7 @@ import (
 	"github.com/hyperversal-blocks/averveil/pkg/jwt"
 )
 
-func (s *Services) ValidateToken(next http.Handler) http.Handler {
+func (a *Api) ValidateToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if len(authHeader) == 0 {
@@ -18,7 +18,7 @@ func (s *Services) ValidateToken(next http.Handler) http.Handler {
 
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 
-		info, err := s.jwt.ValidateToken(token)
+		info, err := a.jwt.ValidateToken(token)
 		if err != nil {
 			http.Error(w, "token expired", http.StatusUnauthorized)
 			return
@@ -29,11 +29,11 @@ func (s *Services) ValidateToken(next http.Handler) http.Handler {
 	})
 }
 
-func (s *Services) ErrorHandler(next http.Handler) http.Handler {
+func (a *Api) ErrorHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				s.logger.Error(err)
+				a.logger.Error(err)
 				http.Error(w, "internal server error", http.StatusInternalServerError)
 			}
 		}()
@@ -41,14 +41,14 @@ func (s *Services) ErrorHandler(next http.Handler) http.Handler {
 	})
 }
 
-func (s *Services) HBLOCKAccessHandler() http.Handler {
+func (a *Api) HBLOCKAccessHandler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !s.hblockSemaphore.TryAcquire(1) {
-			s.logger.Debug("hblock access: simultaneous on-chain operations not supported")
-			s.logger.Error(nil, "hblock access: simultaneous on-chain operations not supported")
+		if !a.hblockSemaphore.TryAcquire(1) {
+			a.logger.Debug("hblock access: simultaneous on-chain operations not supported")
+			a.logger.Error(nil, "hblock access: simultaneous on-chain operations not supported")
 			WriteJson(w, "simultaneous on-chain operations not supported", http.StatusTooManyRequests)
 			return
 		}
-		defer s.hblockSemaphore.Release(1)
+		defer a.hblockSemaphore.Release(1)
 	})
 }

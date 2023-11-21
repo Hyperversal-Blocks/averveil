@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"context"
@@ -8,40 +8,33 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 
-	"github.com/hyperversal-blocks/averveil/configuration"
-	"github.com/hyperversal-blocks/averveil/pkg/api"
 	"github.com/hyperversal-blocks/averveil/pkg/auth"
+	"github.com/hyperversal-blocks/averveil/pkg/configuration"
 	"github.com/hyperversal-blocks/averveil/pkg/hblock"
 	jwtPkg "github.com/hyperversal-blocks/averveil/pkg/jwt"
 	"github.com/hyperversal-blocks/averveil/pkg/logger"
 	"github.com/hyperversal-blocks/averveil/pkg/node"
 	"github.com/hyperversal-blocks/averveil/pkg/store"
-	"github.com/hyperversal-blocks/averveil/pkg/upload"
-	"github.com/hyperversal-blocks/averveil/pkg/user"
+	upl "github.com/hyperversal-blocks/averveil/pkg/upload"
+	u "github.com/hyperversal-blocks/averveil/pkg/user"
 	"github.com/hyperversal-blocks/averveil/pkg/util"
-	"github.com/hyperversal-blocks/averveil/pkg/view"
+	v "github.com/hyperversal-blocks/averveil/pkg/view"
 )
 
 type Services struct {
-	config *configuration.Config
+	Config configuration.Config
 	logger *logrus.Logger
-	api    *api.Services
+	Api    *Api
 }
 
-func Init(desktopConfig bool) error {
-	if desktopConfig {
-		// TODO: Add logic for when config will be set from frontend
-		// TODO: move server init to pkg
-		// TODO: re-design config and bootstrapper logic
-	}
-
+func Init() error {
 	services, err := bootstrapper(context.Background())
 	if err != nil {
 		return err
 	}
 
-	services.api.Cors()
-	services.api.Routes()
+	services.Api.Cors()
+	services.Api.Routes()
 
 	go func() {
 		services.startServer()
@@ -50,11 +43,12 @@ func Init(desktopConfig bool) error {
 }
 
 func (c *Services) startServer() {
-	address := c.config.Server.Host + c.config.Server.PORT
+	serverConf := c.Config.GetConfig().Server
+	address := serverConf.Host + serverConf.PORT
 
 	c.logger.Info("Starting Server at:", address)
 
-	err := http.ListenAndServe(address, c.api.GetRouter())
+	err := http.ListenAndServe(address, c.Api.GetRouter())
 	if err != nil {
 		c.logger.Error("error starting server at ", address, " with error: ", err)
 		panic(err)
@@ -62,12 +56,14 @@ func (c *Services) startServer() {
 }
 
 func bootstrapper(ctx context.Context) (*Services, error) {
-	confInstance, err := configuration.Init()
+	conf, err := configuration.Init()
 	if err != nil {
 		return nil, fmt.Errorf("error bootstrapping config: %w", err)
 	}
 
-	loggerInstance := logger.Init(confInstance)
+	confInstance := conf.GetConfig()
+
+	loggerInstance := logger.Init(confInstance.Logger.Level, confInstance.Logger.Env)
 	if err != nil {
 		return nil, fmt.Errorf("error bootstrapping logger: %w", err)
 	}
@@ -87,7 +83,7 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 		confInstance.JWT.Expiry)
 
 	// Bootstrapping Services
-	userService := user.New(storer, loggerInstance, node.Signer.EthereumAddress())
+	userService := u.New(storer, loggerInstance, node.Signer.EthereumAddress())
 
 	authService := auth.New(node.Signer, storer, jwt, userService)
 
@@ -98,21 +94,39 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 
 	hblockContractService := hblock.New(&node.TxService, node.Signer.EthereumAddress(), loggerInstance, address, abi)
 
-	uploadService := upload.NewUploadService(loggerInstance, storer)
+	uploadService := upl.NewUploadService(loggerInstance, storer)
 
-	viewService := view.NewViewService(loggerInstance, storer)
+	viewService := v.NewViewService(loggerInstance, storer)
 	// Bootstrapping Controllers
-	userController := api.NewUserController(loggerInstance, hblockContractService)
+	userController := NewUserController(loggerInstance, hblockContractService, confInstance)
 
-	uploadController := api.NewUploadController(loggerInstance, uploadService)
+	uploadController := NewUploadController(loggerInstance, uploadService)
 
-	viewController := api.NewViewController(loggerInstance, viewService)
+	viewController := NewViewController(loggerInstance, viewService)
 
-	apiService := api.New(loggerInstance, chi.NewMux(), authService, userController, node, jwt, uploadController, viewController)
+	apiService := InitAPI(loggerInstance,
+		authService,
+		userController,
+		uploadController,
+		viewController,
+		jwt,
+		node)
 
 	return &Services{
-		config: confInstance,
+		Config: confInstance,
 		logger: loggerInstance,
-		api:    apiService,
+		Api:    apiService,
 	}, nil
+}
+
+func InitAPI(
+	loggerInstance *logrus.Logger,
+	authService auth.Auth,
+	userController User,
+	uploadController Upload,
+	viewController View,
+	jwt jwtPkg.JWT,
+	node *node.Node,
+) *Api {
+	return New(loggerInstance, chi.NewMux(), authService, userController, node, jwt, uploadController, viewController)
 }
