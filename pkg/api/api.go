@@ -19,11 +19,12 @@ type Api struct {
 	user   User
 	node   *node.Node
 	jwt    jwtPkg.JWT
+	swarm  Swarm
 
 	hblockSemaphore *semaphore.Weighted
 }
 
-func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node *node.Node, jwtService jwtPkg.JWT, data Upload, view View) *Api {
+func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node *node.Node, jwtService jwtPkg.JWT, data Upload, view View, swarm Swarm) *Api {
 	return &Api{
 		logger:          logger,
 		router:          router,
@@ -34,5 +35,6 @@ func New(logger *logrus.Logger, router *chi.Mux, auth auth.Auth, user User, node
 		user:            user,
 		upload:          data,
 		view:            view,
+		swarm:           swarm,
 	}
 }

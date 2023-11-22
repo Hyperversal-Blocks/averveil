@@ -15,6 +15,7 @@ import (
 	"github.com/hyperversal-blocks/averveil/pkg/logger"
 	"github.com/hyperversal-blocks/averveil/pkg/node"
 	"github.com/hyperversal-blocks/averveil/pkg/store"
+	swarmService "github.com/hyperversal-blocks/averveil/pkg/swarm"
 	upl "github.com/hyperversal-blocks/averveil/pkg/upload"
 	u "github.com/hyperversal-blocks/averveil/pkg/user"
 	"github.com/hyperversal-blocks/averveil/pkg/util"
@@ -97,6 +98,9 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 	uploadService := upl.NewUploadService(loggerInstance, storer)
 
 	viewService := v.NewViewService(loggerInstance, storer)
+
+	swarmService := swarmService.New(confInstance.Swarm.Host + confInstance.Swarm.PORT)
+
 	// Bootstrapping Controllers
 	userController := NewUserController(loggerInstance, hblockContractService, confInstance)
 
@@ -104,13 +108,15 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 
 	viewController := NewViewController(loggerInstance, viewService)
 
+	swarmController := NewSwarmController(loggerInstance, swarmService)
+
 	apiService := InitAPI(loggerInstance,
 		authService,
 		userController,
 		uploadController,
 		viewController,
 		jwt,
-		node)
+		node, swarmController)
 
 	return &Services{
 		Config: confInstance,
@@ -127,6 +133,7 @@ func InitAPI(
 	viewController View,
 	jwt jwtPkg.JWT,
 	node *node.Node,
+	swarmController Swarm,
 ) *Api {
-	return New(loggerInstance, chi.NewMux(), authService, userController, node, jwt, uploadController, viewController)
+	return New(loggerInstance, chi.NewMux(), authService, userController, node, jwt, uploadController, viewController, swarmController)
 }

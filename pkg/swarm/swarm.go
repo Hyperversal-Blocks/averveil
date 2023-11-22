@@ -2,9 +2,7 @@ package swarm
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -12,33 +10,37 @@ type swarm struct {
 	addr string
 }
 
-func (s *swarm) CheckNodeHealthAndReadiness() error {
+type HealthStatusResponse struct {
+	Status          string `json:"status"`
+	Version         string `json:"version"`
+	APIVersion      string `json:"apiVersion"`
+	DebugAPIVersion string `json:"debugApiVersion"`
+}
+
+func (s *swarm) CheckNodeHealthAndReadiness() (*HealthStatusResponse, error) {
 	url := "http://localhost:1635/health"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	defer res.Body.Close()
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	m := make(map[string]string)
-	
+	m := new(HealthStatusResponse)
+
 	_ = json.Unmarshal(body, &m)
-	if m["status"] == "ok" {
-		fmt.Println("is ok")
-	}
 
-	return nil
+	return m, nil
 }
 
 func (s *swarm) BuyPostageStamp() error {
@@ -87,7 +89,7 @@ func (s *swarm) GetBalance() error {
 }
 
 type Swarm interface {
-	CheckNodeHealthAndReadiness() error
+	CheckNodeHealthAndReadiness() (*HealthStatusResponse, error)
 	BuyPostageStamp() error
 	GetChequeBookBalance() error
 	GetChainState() error
@@ -99,8 +101,8 @@ type Swarm interface {
 	GetBalance() error
 }
 
-func New() Swarm {
-	return &swarm{}
+func New(addr string) Swarm {
+	return &swarm{addr: addr}
 }
 
 // TODO: https://github.com/ethersphere/bee/tree/master/openapi

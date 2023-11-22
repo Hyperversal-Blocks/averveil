@@ -35,6 +35,10 @@ func (a *Api) Routes() {
 	a.router.Route("/view", func(r chi.Router) {
 		r.Get("/csv", a.view.CSV)
 	})
+
+	a.router.Route("/swarm", func(r chi.Router) {
+		r.Get("/health", a.swarm.GetNodeHealth)
+	})
 }
 
 func (a *Api) GetRouter() *chi.Mux {

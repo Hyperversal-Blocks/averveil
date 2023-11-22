@@ -18,6 +18,7 @@ func Execute() error {
 	}
 
 	rootCmd.Flags().BoolVarP(&envConfig, "envConfig", "e", false, "Set configs from desktop")
+	rootCmd.Flags().BoolVarP(&envConfig, "swarmEnabled", "s", false, "Enable Swarm")
 
 	// Execute the root command
 	if err := rootCmd.Execute(); err != nil {
