@@ -3,6 +3,7 @@ package fsnotify
 import (
 	"archive/zip"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -34,6 +35,20 @@ func (w *watcher) Watch() error {
 		return err
 	}
 
+	// Process existing ZIP files in the directory
+	existingFiles, err := ioutil.ReadDir(path)
+	if err != nil {
+		return err
+	}
+	for _, file := range existingFiles {
+		if filepath.Ext(file.Name()) == ".zip" {
+			if err := w.readZip(filepath.Join(path, file.Name())); err != nil {
+				return err
+			}
+		}
+	}
+
+	// Set up the file watcher
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		return err
@@ -80,8 +95,9 @@ func (w *watcher) Watch() error {
 	case err := <-errChan:
 		return err
 	case <-done:
-		//
+		// Watcher stopped
 	}
+
 	return nil
 }
 
