@@ -3,7 +3,6 @@ package fsnotify
 import (
 	"archive/zip"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -37,12 +36,21 @@ func (w *watcher) Watch() error {
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer watcher.Close()
 
+	// Path to the folder containing the zip folder
+	err = watcher.Add(path)
+	if err != nil {
+		return err
+	}
+
 	done := make(chan bool)
+	errChan := make(chan error)
+
 	go func() {
+		defer close(done)
 		for {
 			select {
 			case event, ok := <-watcher.Events:
@@ -52,28 +60,32 @@ func (w *watcher) Watch() error {
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					fmt.Printf("New file detected: %s\n", event.Name)
 					if filepath.Ext(event.Name) == ".zip" {
-						go readZip(event.Name)
+						go func(name string) {
+							if err := w.readZip(name); err != nil {
+								errChan <- err
+							}
+						}(event.Name)
 					}
 				}
 			case err, ok := <-watcher.Errors:
 				if !ok {
 					return
 				}
-				log.Println("error:", err)
+				errChan <- err
 			}
 		}
 	}()
 
-	// Path to the folder containing the zip folder
-	err = watcher.Add(path)
-	if err != nil {
+	select {
+	case err := <-errChan:
 		return err
+	case <-done:
+		//
 	}
-	<-done
 	return nil
 }
 
-func readZip(zipPath string) error {
+func (w *watcher) readZip(zipPath string) error {
 	r, err := zip.OpenReader(zipPath)
 	if err != nil {
 		return err
