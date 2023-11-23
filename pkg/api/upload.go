@@ -21,6 +21,11 @@ type upload struct {
 	service upload2.Service
 }
 
+func (u *upload) ZIP(w http.ResponseWriter, r *http.Request) {
+	// TODO implement me
+	panic("implement me")
+}
+
 func (u *upload) CSV(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
@@ -54,4 +59,5 @@ func (u *upload) CSV(w http.ResponseWriter, r *http.Request) {
 
 type Upload interface {
 	CSV(w http.ResponseWriter, r *http.Request)
+	ZIP(w http.ResponseWriter, r *http.Request)
 }

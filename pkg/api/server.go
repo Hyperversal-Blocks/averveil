@@ -10,6 +10,7 @@ import (
 
 	"github.com/hyperversal-blocks/averveil/pkg/auth"
 	"github.com/hyperversal-blocks/averveil/pkg/configuration"
+	"github.com/hyperversal-blocks/averveil/pkg/fsnotify"
 	"github.com/hyperversal-blocks/averveil/pkg/hblock"
 	jwtPkg "github.com/hyperversal-blocks/averveil/pkg/jwt"
 	"github.com/hyperversal-blocks/averveil/pkg/logger"
@@ -82,6 +83,13 @@ func bootstrapper(ctx context.Context) (*Services, error) {
 	jwt := jwtPkg.New(confInstance.JWT.Issuer,
 		confInstance.JWT.Issuer,
 		confInstance.JWT.Expiry)
+
+	// bootstrapping routines
+	watcher := fsnotify.NewWatcher(storer, loggerInstance)
+	err = watcher.Watch()
+	if err != nil {
+		return nil, err
+	}
 
 	// Bootstrapping Services
 	userService := u.New(storer, loggerInstance, node.Signer.EthereumAddress())
