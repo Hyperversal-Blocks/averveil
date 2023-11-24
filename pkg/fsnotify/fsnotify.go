@@ -100,7 +100,10 @@ func (w *watcher) Watch() error {
 				case event.Op&fsnotify.Remove == fsnotify.Remove:
 					fmt.Printf("File deleted: %s\n", event.Name)
 					if filepath.Ext(event.Name) == ".zip" {
-						w.isDeleted(event.Name)
+						err := w.isDeleted(event.Name)
+						if err != nil {
+							errChan <- err
+						}
 					}
 				}
 			case err, ok := <-watcher.Errors:
@@ -132,15 +135,24 @@ func (w *watcher) readZip(zipPath string) error {
 	fmt.Printf("Contents of %s:\n", zipPath)
 	for _, f := range r.File {
 		if filepath.Ext(f.Name) == ".csv" {
-			fmt.Println(f.Name)
+			fmt.Println(filepath.Base(zipPath) + "/" + filepath.Base(f.Name))
+			err := w.store.InsertZipRecord(filepath.Base(zipPath), filepath.Base(f.Name))
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
-func (w *watcher) isDeleted(zipPath string) {
+func (w *watcher) isDeleted(zipPath string) error {
 	fileName := filepath.Base(zipPath)
 	fmt.Printf("Zip file deleted: %s\n", fileName)
+	err := w.store.DeleteZipRecord(fileName)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func create(p string) (string, error) {
