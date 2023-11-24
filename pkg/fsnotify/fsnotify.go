@@ -72,7 +72,8 @@ func (w *watcher) Watch() error {
 				if !ok {
 					return
 				}
-				if event.Op&fsnotify.Create == fsnotify.Create {
+				switch {
+				case event.Op&fsnotify.Create == fsnotify.Create:
 					fmt.Printf("New file detected: %s\n", event.Name)
 					if filepath.Ext(event.Name) == ".zip" {
 						go func(name string) {
@@ -80,6 +81,11 @@ func (w *watcher) Watch() error {
 								errChan <- err
 							}
 						}(event.Name)
+					}
+				case event.Op&fsnotify.Remove == fsnotify.Remove:
+					fmt.Printf("File deleted: %s\n", event.Name)
+					if filepath.Ext(event.Name) == ".zip" {
+						w.isDeleted(event.Name)
 					}
 				}
 			case err, ok := <-watcher.Errors:
@@ -110,9 +116,16 @@ func (w *watcher) readZip(zipPath string) error {
 
 	fmt.Printf("Contents of %s:\n", zipPath)
 	for _, f := range r.File {
-		fmt.Println(f.Name)
+		if filepath.Ext(f.Name) == ".csv" {
+			fmt.Println(f.Name)
+		}
 	}
 	return nil
+}
+
+func (w *watcher) isDeleted(zipPath string) {
+	fileName := filepath.Base(zipPath)
+	fmt.Printf("Zip file deleted: %s\n", fileName)
 }
 
 func create(p string) (string, error) {
