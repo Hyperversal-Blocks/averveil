@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/sirupsen/logrus"
@@ -76,9 +77,23 @@ func (w *watcher) Watch() error {
 				case event.Op&fsnotify.Create == fsnotify.Create:
 					fmt.Printf("New file detected: %s\n", event.Name)
 					if filepath.Ext(event.Name) == ".zip" {
+						time.Sleep(3 * time.Second)
 						go func(name string) {
-							if err := w.readZip(name); err != nil {
-								errChan <- err
+							for {
+								// Try to open the file in exclusive mode
+								file, err := os.OpenFile(name, os.O_RDWR|os.O_EXCL, 0666)
+								if err != nil {
+									// If open fails, wait for a bit and try again
+									time.Sleep(500 * time.Millisecond)
+									continue
+								}
+								file.Close() // Close the file if successfully opened
+
+								// Process the file after successful open
+								if err := w.readZip(name); err != nil {
+									errChan <- err
+								}
+								break // Break the loop once the file is processed
 							}
 						}(event.Name)
 					}
