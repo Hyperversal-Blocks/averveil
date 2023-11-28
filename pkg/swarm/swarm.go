@@ -1,11 +1,14 @@
 package swarm
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
+	"os"
 )
 
 type swarm struct {
@@ -21,6 +24,11 @@ type HealthStatusResponse struct {
 
 type ReferenceResponse struct {
 	Reference string `json:"reference"`
+}
+
+type UploadResponseHeaders struct {
+	SwarmTag string
+	ETag     string
 }
 
 type DebugPostageAllBatchesResponse struct {
@@ -305,12 +313,88 @@ func (s *swarm) GetBalance() error {
 	panic("implement me")
 }
 
+func (s *swarm) UploadBZZ(baseURL, bearerToken, swarmPostageBatchId, filePath string) (*ReferenceResponse, *UploadResponseHeaders, error) {
+	// Open the file
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer file.Close()
+
+	// Create a buffer to write our multipart form
+	var b bytes.Buffer
+	w := multipart.NewWriter(&b)
+
+	// Add the file to the multipart form
+	fw, err := w.CreateFormFile("file", file.Name())
+	if err != nil {
+		return nil, nil, err
+	}
+	if _, err = io.Copy(fw, file); err != nil {
+		return nil, nil, err
+	}
+
+	// Close the multipart writer to set the terminating boundary
+	w.Close()
+
+	// Construct the URL
+	url := fmt.Sprintf("%s/bzz", baseURL)
+
+	// Create an HTTP client
+	client := &http.Client{}
+
+	// Create a POST request
+	req, err := http.NewRequest("POST", url, &b)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Set the necessary headers
+	req.Header.Set("Authorization", "Bearer "+bearerToken)
+	req.Header.Set("Content-Type", w.FormDataContentType())
+	req.Header.Set("swarm-postage-batch-id", swarmPostageBatchId)
+
+	// Send the request
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Check if the status code is 201 (Created)
+	if resp.StatusCode != http.StatusCreated {
+		return nil, nil, fmt.Errorf("server returned non-201 status: %d - body: %s", resp.StatusCode, string(body))
+	}
+
+	// Unmarshal the JSON response into the ReferenceResponse struct
+	var referenceResponse ReferenceResponse
+	err = json.Unmarshal(body, &referenceResponse)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Parse response headers
+	headers := &UploadResponseHeaders{
+		SwarmTag: resp.Header.Get("swarm-tag"),
+		ETag:     resp.Header.Get("etag"),
+	}
+
+	return &referenceResponse, headers, nil
+}
+
 type Swarm interface {
 	CheckNodeHealthAndReadiness() (*HealthStatusResponse, error)
 	BuyPostageStamp(baseURL string, bearerToken string, amount string, depth int, label string, immutable bool) (string, error)
 	GetPostageBatchStatus(baseURL, bearerToken, batchID string) (*PostageBatch, error)
 	TopUpPostageBatch(baseURL, bearerToken, batchID string, amount int) (string, error)
 	Upload(baseURL, bearerToken, swarmPostageBatchId string, data io.Reader) (*ReferenceResponse, error)
+	UploadBZZ(baseURL, bearerToken, swarmPostageBatchId, filePath string) (*ReferenceResponse, *UploadResponseHeaders, error)
 	GetAllBatches(baseURL, bearerToken string) (*DebugPostageAllBatchesResponse, error)
 	GetBalance() error
 }
